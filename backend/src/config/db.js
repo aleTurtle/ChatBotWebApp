@@ -1,5 +1,6 @@
 const mongoose = require('mongoose');
-//require('dotenv').config({ path: '../../.env' });  // Per leggere il file .env
+//require('dotenv').config({ path: './backend/.env' });  // Usa il percorso giusto
+  // Carica .env da backend/
 
 const connectDB = async () => {
   try {

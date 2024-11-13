@@ -1,0 +1,18 @@
+const Chatbot = require('../models/chatbot');
+
+// Ottieni il chatbot (poiché è sempre lo stesso)
+const getChatbot = async (req, res) => {
+  try {
+    const chatbot = await Chatbot.findOne();
+    if (!chatbot) {
+      return res.status(404).json({ message: 'Chatbot non trovato' });
+    }
+    res.status(200).json(chatbot);
+  } catch (error) {
+    res.status(500).json({ message: 'Errore nel recupero del chatbot', error });
+  }
+};
+
+module.exports = {
+  getChatbot,
+};

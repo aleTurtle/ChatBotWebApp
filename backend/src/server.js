@@ -1,4 +1,4 @@
-require('dotenv').config({ path: '../.env' }); // Carica le variabili d'ambiente dal file .env
+require('dotenv').config({ path: '../.env' });  // Carica le variabili d'ambiente dal file .env
 
 
 // Verifica se MONGO_URI è stata correttamente caricata

@@ -1,0 +1,79 @@
+// Importa Mongoose
+const mongoose = require('mongoose');
+
+// Definisci lo schema per il messaggio
+const messageSchema = new mongoose.Schema({
+    
+  // ID univoco per ogni messaggio
+  message_id: {
+    type: String,
+    required: true,
+    unique: true,
+  },
+  
+  // Chi invia il messaggio (può essere 'utente' o 'chatbot')
+  mittente: {
+    type: String,
+    enum: ['utente', 'chatbot'],
+    required: true,
+  },
+
+  // Chi riceve il messaggio (può essere 'utente' o 'chatbot')
+  destinatario: {
+    type: String,
+    enum: ['utente', 'chatbot'],
+    required: true,
+  },
+
+  // Testo del messaggio
+  testo: {
+    type: String,
+    required: true,
+  },
+
+  // Timestamp del messaggio
+  timestamp: {
+    type: Date,
+    default: Date.now,
+  },
+
+  // Tipo di messaggio (domanda, risposta, saluto, ecc.)
+  tipo_messaggio: {
+    type: String,
+    enum: ['domanda', 'risposta', 'saluto', 'informazione', 'errore'],
+    required: true,
+  },
+
+  // Stato del messaggio (inviato, ricevuto, letto, ecc.)
+  status: {
+    type: String,
+    enum: ['inviato', 'ricevuto', 'letto', 'elaborato'],
+    default: 'inviato',
+  },
+
+  // ID del messaggio originale (se questo è una risposta a una domanda precedente)
+  id_messaggio_originale: {
+    type: String,
+    ref: 'Message',  // Collega questo messaggio a un altro messaggio (relazione)
+    default: null,
+  },
+
+  // Categoria del messaggio (ad esempio: 'corsi', 'orari', 'tesi', ecc.)
+  categoria: {
+    type: String,
+    enum: ['corsi', 'orari', 'tesi', 'richiesta generale'],
+    default: 'richiesta generale',
+  },
+
+  // Tags per una ricerca avanzata (ad esempio, 'scadenze', 'esami', ecc.)
+  tags: {
+    type: [String],
+    default: [],
+  },
+});
+
+// Crea il modello del messaggio basato sullo schema
+const Message = mongoose.model('Message', messageSchema);
+
+// Esportare il modello
+module.exports = Message;

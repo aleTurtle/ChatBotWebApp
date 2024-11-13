@@ -1,0 +1,44 @@
+const mongoose = require('mongoose');
+
+const userSchema = new mongoose.Schema({
+
+ // ID studente, unico per ogni utente   
+  studentId: { 
+    type: String, 
+    required: true,   // tale campo è obbligatorio all'interno della collezione
+     unique: true     //tale valore deve essere unico all'interno della collezione
+     }, 
+
+
+ // Nome dell'utente  
+  name: { 
+    type: String,
+     required: true
+     },         
+     
+ // Email dell'utente    
+  email: {
+     type: String,
+      required: true, 
+      unique: true 
+    },    
+
+// Ruolo (es. studente, professore, admin)
+  role: { 
+    type: String, 
+    enum: ['student', 'professor', 'admin'],
+    default: 'student' 
+    }, 
+
+// Data di creazione dell'account
+  createdAt: { 
+    type: Date, 
+    default: Date.now 
+}      
+  
+
+});
+
+const User = mongoose.model('User', userSchema);
+
+module.exports = User;
