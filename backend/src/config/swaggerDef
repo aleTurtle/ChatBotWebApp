@@ -1,0 +1,25 @@
+
+//configurazione swagger
+
+const swaggerJsdoc = require('swagger-jsdoc');
+
+const options = {
+  definition: {
+    openapi: '3.0.0',
+    info: {
+      title: 'Chatbot Università API', // Nome del progetto
+      version: '1.0.0',              // Versione
+      description: 'Documentazione delle API del chatbot universitario', // Descrizione
+    },
+    servers: [
+      {
+        url: 'http://localhost:3000', // URL del server di sviluppo
+        description: 'Development server',
+      },
+    ],
+  },
+  apis: ['./routes/*.js'], // Percorso ai file che contengono documentazione inline
+};
+
+const swaggerSpecs = swaggerJsdoc(options);
+module.exports = swaggerSpecs;

@@ -7,12 +7,19 @@ console.log('MONGO_URI:', process.env.MONGO_URI);  // Aggiungi questa riga per v
 // Importa le dipendenze
 const express = require('express');
 const connectDB = require('./config/db.js'); // Importa la funzione di connessione
+const swaggerUi = require('swagger-ui-express'); // Interfaccia Swagger
+const swaggerSpecs = require('./config/swaggerDef.js'); // Configurazione Swagger
+
+
 
 // Crea l'app Express
 const app = express();
 
 // Connessione al database MongoDB
 connectDB();
+
+// Imposta Swagger per la documentazione delle API
+app.use('/api-docs', swaggerUi.serve, swaggerUi.setup(swaggerSpecs));
 
 // Imposta una route di esempio
 app.get('/', (req, res) => {
