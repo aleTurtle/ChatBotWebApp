@@ -1,5 +1,7 @@
+// Importa mongoose
 const mongoose = require('mongoose');
 
+// Funzione per connettersi al database MongoDB
 const connectDB = async () => {
   try {
     await mongoose.connect(process.env.MONGO_URI, {
@@ -8,8 +10,8 @@ const connectDB = async () => {
     });
     console.log('Connesso a MongoDB');
   } catch (error) {
-    console.error('Errore nella connessione a MongoDB:', error);
-    process.exit(1); // Esce in caso di errore
+    console.error('Errore di connessione a MongoDB:', error);
+    process.exit(1);  // Esci se la connessione fallisce
   }
 };
 

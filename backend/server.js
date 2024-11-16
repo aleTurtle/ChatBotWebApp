@@ -1,5 +1,5 @@
 // Carica le variabili d'ambiente dal file .env
-require('dotenv').config({ path: '../.env' });  // Risale di un livello per trovare il file .env
+require('dotenv').config();  
 
 // Verifica che la variabile MONGO_URI sia correttamente caricata
 console.log('MONGO_URI:', process.env.MONGO_URI);
