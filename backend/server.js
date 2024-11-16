@@ -6,9 +6,9 @@ console.log('MONGO_URI:', process.env.MONGO_URI);
 
 // Importa le dipendenze
 const express = require('express');
-const connectDB = require('./config/db');  // Importa la funzione di connessione al DB
+const connectDB = require('./src/config/db'); // Importa la funzione di connessione al DB
 const swaggerUi = require('swagger-ui-express'); // Interfaccia Swagger
-const swaggerSpecs = require('./config/swaggerDef.js'); // Configurazione Swagger
+const swaggerSpecs = require('./src/config/swaggerDef'); // Configurazione Swagger
 
 // Crea l'app Express
 const app = express();
