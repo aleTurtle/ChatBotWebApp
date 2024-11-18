@@ -1,0 +1,26 @@
+const axios = require('axios');
+
+// Funzione per inviare una richiesta a Rasa
+async function processUserRequest(userInput) {
+  try {
+    // Invia il messaggio all'API di Rasa
+    const response = await axios.post('http://localhost:5005/webhooks/rest/webhook', {
+      sender: 'user',  // Nome del mittente (utente)
+      message: userInput,  // Il messaggio inviato dall'utente
+    });
+
+    // Estrai l'intento e le entità dalla risposta di Rasa
+    const intent = response.data[0]?.intent?.name || '';
+    const entities = response.data[0]?.entities || [];
+
+    return {
+      intent,
+      entities,
+    };
+  } catch (error) {
+    console.error('Errore nell’elaborazione della richiesta Rasa:', error);
+    throw new Error('Impossibile elaborare la richiesta');
+  }
+}
+
+module.exports = { processUserRequest };

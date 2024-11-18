@@ -24,6 +24,9 @@ app.get('/', (req, res) => {
   res.send('Benvenuto nel chatbot dell\'università!');
 });
 
+const lezioniRoutes = require('./src/routes/lezioni'); // Importa il modulo delle routes
+app.use('/lezioni', lezioniRoutes); // Usa le routes
+
 // Configura la porta dal file .env o usa 3000 di default
 const PORT = process.env.PORT || 3000;
 
