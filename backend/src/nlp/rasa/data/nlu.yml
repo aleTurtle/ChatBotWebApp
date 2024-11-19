@@ -1,0 +1,35 @@
+version: "3.1"
+nlu:
+  - intent: greet
+    examples: |
+      - Ciao
+      - Salve
+      - Buongiorno
+      - Hey
+      - Ciao bot
+
+  - intent: goodbye
+    examples: |
+      - Arrivederci
+      - A presto
+      - Ci vediamo
+      - Addio
+
+  - intent: inform_courses
+    examples: |
+      - Parlami dei corsi
+      - Voglio informazioni sui corsi
+      - Quali corsi offrite?
+      - Puoi spiegarmi di cosa trattano i corsi?
+
+  - intent: ask_help
+    examples: |
+      - Ho bisogno di aiuto
+      - Puoi aiutarmi?
+      - Ho un problema
+      - Come funziona questo bot?
+
+  - intent: provide_course_type
+    examples: |
+      - Voglio sapere di più su Python
+      - Dimmi

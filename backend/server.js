@@ -4,14 +4,30 @@ require('dotenv').config();
 // Verifica che la variabile MONGO_URI sia correttamente caricata
 console.log('MONGO_URI:', process.env.MONGO_URI);
 
+
 // Importa le dipendenze
 const express = require('express');
 const connectDB = require('./src/config/db'); // Importa la funzione di connessione al DB
 const swaggerUi = require('swagger-ui-express'); // Interfaccia Swagger
 const swaggerSpecs = require('./src/config/swaggerDef'); // Configurazione Swagger
 
+
+// Importa il motore NLP
+const bodyParser = require('body-parser'); // Per elaborare il corpo delle richieste
+const RasaEngine = require('./src/nlp/rasaEngine'); // Classe per interagire con Rasa
+console.log('NLP_ENGINE:', process.env.NLP_ENGINE);
+
+const BASE_URL = process.env.ENGINE_BASE_URL;
+console.log('ENGINE_BASE_URL:', process.env.ENGINE_BASE_URL);
+
+// Crea un'istanza di RasaEngine
+const rasaEngine = new RasaEngine(BASE_URL);
+
 // Crea l'app Express
 const app = express();
+
+//app.use(express.json()); // Middleware per il parsing del corpo JSON
+app.use(bodyParser.json());
 
 // Connessione al database MongoDB
 connectDB();  // Funzione di connessione al DB
@@ -24,8 +40,34 @@ app.get('/', (req, res) => {
   res.send('Benvenuto nel chatbot dell\'università!');
 });
 
+// Endpoint per inviare messaggi a Rasa
+app.post('/api/message', async (req, res) => {
+  const { message, sender } = req.body; // Estrarre il messaggio e il mittente dal corpo della richiesta
+
+  if (!message || !sender) {
+    return res.status(400).json({ error: 'Message and sender are required' });
+  }
+
+  try {
+    const rasaResponse = await rasaEngine.sendMessage(message); // Invia il messaggio a Rasa
+    res.json({ responses: rasaResponse }); // Invia la risposta al client
+  } catch (error) {
+    console.error("Errore durante la comunicazione con Rasa:", error.message);
+    res.status(500).json({ error: 'Internal server error' });
+  }
+});
+
+
+
 const lezioniRoutes = require('./src/routes/lezioni'); // Importa il modulo delle routes
 app.use('/lezioni', lezioniRoutes); // Usa le routes
+
+//const chatRoutes = require('./src/routes/chat'); // Importa il modulo delle routes
+//app.use('/chat', chatRoutes); // Usa le routes
+
+
+
+
 
 // Configura la porta dal file .env o usa 3000 di default
 const PORT = process.env.PORT || 3000;

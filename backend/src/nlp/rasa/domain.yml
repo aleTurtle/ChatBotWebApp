@@ -1,0 +1,23 @@
+version: "3.1"
+
+intents:
+  - greet
+  - goodbye
+  - inform_courses
+  - ask_help
+
+entities:
+  - course_type
+
+slots:
+  course_type:
+    type: text
+    influence_conversation: true
+
+responses:
+  utter_greet:
+    - text: "Ciao! Come posso aiutarti oggi?"
+  utter_goodbye:
+    - text: "Arrivederci! Spero di rivederti presto."
+  utter_courses_info:
+    - text:
