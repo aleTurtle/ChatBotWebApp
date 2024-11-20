@@ -1,12 +1,13 @@
 const express = require("express");
 const router = express.Router();
-const nlpEngine = require("../config/nlpConfig");
+const axios = require("axios"); // Per inviare richieste HTTP
 
 /**
  * @swagger
- * /chat:
+ * /api/chat:
  *   post:
- *     summary: Elabora un messaggio con il motore NLP
+ *     summary: Invia un messaggio al server Rasa
+ *     description: Questo endpoint invia un messaggio al server Rasa e restituisce la risposta.
  *     requestBody:
  *       required: true
  *       content:
@@ -16,44 +17,52 @@ const nlpEngine = require("../config/nlpConfig");
  *             properties:
  *               message:
  *                 type: string
- *                 description: Messaggio dell'utente da elaborare
- *                 example: "Ciao, qual è il meteo di oggi?"
+ *                 description: Messaggio da inviare al bot.
+ *                 example: "Ciao, quali corsi sono disponibili?"
+ *               sender:
+ *                 type: string
+ *                 description: ID dell'utente che invia il messaggio.
+ *                 example: "utente_123"
  *     responses:
  *       200:
- *         description: Risultato elaborato dal motore NLP
+ *         description: Risposta dal server Rasa
  *         content:
  *           application/json:
  *             schema:
  *               type: object
  *               properties:
- *                 intent:
- *                   type: string
- *                   description: Intent rilevato
- *                   example: "inform_weather"
- *                 entities:
+ *                 responses:
  *                   type: array
- *                   description: Entità estratte dal messaggio
  *                   items:
  *                     type: object
- *                     properties:
- *                       entity:
- *                         type: string
- *                         description: Nome dell'entità
- *                         example: "location"
- *                       value:
- *                         type: string
- *                         description: Valore dell'entità
- *                         example: "Roma"
+ *                   example: [
+ *                     { "recipient_id": "utente_123", "text": "Benvenuto! Ecco i corsi disponibili..." }
+ *                   ]
+ *       400:
+ *         description: Input non valido
+ *       500:
+ *         description: Errore interno del server
  */
+
 router.post("/", async (req, res) => {
-  const { message } = req.body;
+  const { message, sender } = req.body;
+
+  if (!message || !sender) {
+    return res.status(400).json({ error: "Message and sender are required" });
+  }
 
   try {
-    const response = await nlpEngine.parseMessage(message);
-    res.json(response);
+    // Invia il messaggio al server Rasa
+    const rasaResponse = await axios.post("http://localhost:5005/webhooks/rest/webhook", {
+      sender, // ID del mittente
+      message, // Messaggio inviato dall'utente
+    });
+
+    // Invia la risposta di Rasa al client
+    res.json({ responses: rasaResponse.data });
   } catch (error) {
-    console.error(error);
-    res.status(500).send("Errore durante l'elaborazione del messaggio");
+    console.error("Errore durante la comunicazione con Rasa:", error.message);
+    res.status(500).json({ error: "Errore durante l'elaborazione del messaggio" });
   }
 });
 
