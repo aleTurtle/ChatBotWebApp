@@ -27,3 +27,8 @@ stories:
       - action: utter_greet
       - intent: goodbye
       - action: utter_goodbye
+      
+  - story: chiedi_orari_lezioni
+    steps:
+      - intent: ask_lessons
+      - action: action_get_lessons

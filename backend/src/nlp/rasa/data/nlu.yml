@@ -33,3 +33,10 @@ nlu:
     examples: |
       - Voglio sapere di più su Python
       - Dimmi
+
+  - intent: ask_lessons
+    examples: |
+      - Voglio sapere gli orari delle lezioni
+      - Quali lezioni ci sono dal [12 dicembre](start_date) al [20 dicembre](end_date)?
+      - Mostrami gli orari delle lezioni per questa settimana
+      - Puoi dirmi quando ci sono le lezioni?
