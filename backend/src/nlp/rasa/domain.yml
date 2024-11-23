@@ -7,6 +7,7 @@ intents:
   - ask_help
   - bot_challenge         
   - provide_course_type
+  - ask_lessons
 
 entities:
   - course_type
@@ -48,7 +49,8 @@ responses:
     - text: "Sono un bot creato per aiutarti!" 
   utter_ask_help:  
     - text: "In cosa posso aiutarti?"
-
+  #utter_ask_for_dates:
+  #  - text: "Per favore, forniscimi le date di inizio e fine nel formato 'gg mese'."
 
 actions:
   - action_get_lessons
