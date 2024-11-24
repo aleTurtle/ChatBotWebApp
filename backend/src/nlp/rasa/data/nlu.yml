@@ -40,3 +40,8 @@ nlu:
       - Quali lezioni ci sono dal [12 dicembre](start_date) al [20 dicembre](end_date)?
       - Mostrami gli orari delle lezioni per questa settimana
       - Puoi dirmi quando ci sono le lezioni?
+      - Quali sono gli orari delle lezioni per domani?
+      - Hai informazioni sulle lezioni di questa settimana?
+      - Mostrami il calendario delle lezioni per questo mese
+      - Voglio sapere quali lezioni ci sono oggi
+      - Mostrami tutte le lezioni dal [10 ottobre](start_date) al [18 ottobre](end_date)
