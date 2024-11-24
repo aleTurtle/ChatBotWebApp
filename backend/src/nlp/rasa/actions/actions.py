@@ -5,6 +5,8 @@ from typing import Any, Text, Dict, List
 from datetime import datetime, timedelta
 import pytz
 import dateparser
+import json
+import re  # Per rimuovere i tag HTML
 
 
 class ActionGetLessons(Action):
@@ -56,32 +58,81 @@ class ActionGetLessons(Action):
         base_url = "https://unifare.unicam.it/controller/ajaxController.php"
         url = f"{base_url}?filename=../didattica/controller/orari.php&class=OrariController&method=getDateLezioniByPercorsoCalendar&parametri[]=10028&parametri[]=false&parametri[]=0&start={start_date_iso}&end={end_date_iso}"
 
+        print(f"URL della richiesta: {url}")
+
         try:
             # Invia la richiesta al server
             response = requests.get(url)
             response.raise_for_status()
 
-            print(f"Risposta del server: {response.text}")
+            print(f"Risposta del server (status code): {response.status_code}")
 
-            if response.headers.get("Content-Type") == "application/json":
-                lessons = response.json()
-                if lessons:
-                    message = f"Ecco le lezioni disponibili dal {start_date.strftime('%d %B')} al {end_date.strftime('%d %B')}:\n"
-                    for lesson in lessons:
-                        message += (
-                            f"- {lesson['nome_corso']} il {lesson['data']} "
-                            f"dalle {lesson['ora_inizio']} alle {lesson['ora_fine']}.\n"
-                        )
-                else:
-                    message = f"Non ci sono lezioni programmate dal {start_date.strftime('%d %B')} al {end_date.strftime('%d %B')}."
+            # Analizza la risposta (supponendo sia HTML con dati rilevanti)
+            html_content = response.text
+
+            # Parsing dei dati JSON-like contenuti nell'HTML
+            start_data_index = html_content.find('[')
+            end_data_index = html_content.rfind(']') + 1
+
+            if start_data_index != -1 and end_data_index != -1:
+                raw_json_data = html_content[start_data_index:end_data_index]
+                try:
+                    lessons = json.loads(raw_json_data)  # Converte in formato JSON
+                    print(f"Dati elaborati: {lessons}")
+
+                    # Funzione per pulire i dati HTML
+                    def clean_html(raw_html):
+                        # Rimuove i tag HTML
+                        clean_text = re.sub(r'<[^>]+>', '', raw_html)
+                        return clean_text.strip()
+
+                    # Costruisci il messaggio per l'utente
+                    if lessons:
+                        message = f"Ecco le lezioni disponibili dal {start_date.strftime('%d %B')} al {end_date.strftime('%d %B')}:\n"
+                        for lesson in lessons:
+                            title = lesson.get("title", "Titolo non disponibile")
+                            description_raw = lesson.get("description", "Descrizione non disponibile")
+                            description = clean_html(description_raw)  # Pulisci la descrizione
+                            start = datetime.fromtimestamp(lesson["start"] // 1000).strftime('%d %B %Y, %H:%M')
+                            end = datetime.fromtimestamp(lesson["end"] // 1000).strftime('%H:%M')
+
+                            message += (
+                                f"- {title}: {description}. "
+                                f"Inizio: {start}, Fine: {end}.\n"
+                            )
+                    else:
+                        message = f"Non ci sono lezioni programmate dal {start_date.strftime('%d %B')} al {end_date.strftime('%d %B')}."
+
+                except json.JSONDecodeError as e:
+                    message = f"Errore nel parsing del JSON dai dati HTML: {str(e)}"
+
             else:
-                message = f"Errore: la risposta del server non è in formato JSON. Tipo di contenuto ricevuto: {response.headers.get('Content-Type')}"
+                message = "Errore: non è stato possibile trovare i dati rilevanti nell'HTML ricevuto."
 
         except requests.exceptions.RequestException as e:
             message = f"Errore di rete durante la richiesta delle lezioni: {str(e)}"
 
         dispatcher.utter_message(text=message)
         return []
+
+
+class ActionProvideCourseInfo(Action):
+    def name(self) -> Text:
+        return "action_provide_course_info"
+
+    def run(self, dispatcher: CollectingDispatcher,
+            tracker: "Tracker",
+            domain: Dict[Text, Any]) -> List[Dict[Text, Any]]:
+
+        # Log per debug
+        print("Ciao sono Dave")
+
+        # Risposta dell'azione
+        dispatcher.utter_message(text="Sto recuperando le informazioni del corso richiesto.")
+
+        return []
+
+
 
 
 
