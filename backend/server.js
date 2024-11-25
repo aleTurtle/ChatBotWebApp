@@ -62,15 +62,15 @@ app.post('/api/message', async (req, res) => {
 const lezioniRoutes = require('./src/routes/lezioni'); // Importa il modulo delle routes
 app.use('/lezioni', lezioniRoutes); // Usa le routes
 
-//const chatRoutes = require('./src/routes/chat'); // Importa il modulo delle routes
-//app.use('/chat', chatRoutes); // Usa le routes
+const chatRoutes = require('./src/routes/chat'); // Importa il modulo delle routes
+app.use('/api/chat', chatRoutes); // Usa le routes
 
 
 
 
 
 // Configura la porta dal file .env o usa 3000 di default
-const PORT = process.env.PORT || 3000;
+const PORT = process.env.PORT;
 
 // Avvia il server
 app.listen(PORT, () => {
