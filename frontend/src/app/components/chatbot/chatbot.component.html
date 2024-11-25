@@ -1,0 +1,28 @@
+<div class="chatbot-container">
+    <!-- Barra Laterale -->
+    <aside class="sidebar">
+      <h2>Menu</h2>
+      <ul>
+        <li>Home</li>
+        <li>Impostazioni</li>
+        <li>Aiuto</li>
+      </ul>
+    </aside>
+  
+    <!-- Corpo del Chatbot -->
+    <div class="chat-area">
+      <!-- Messaggi della Chat -->
+      <div class="messages">
+        <div *ngFor="let message of messages" class="message" [ngClass]="{ 'user': message.user, 'bot': !message.user }">
+          {{ message.text }}
+        </div>
+      </div>
+  
+      <!-- Input per i Messaggi -->
+      <div class="input-box">
+        <input type="text" [(ngModel)]="userInput" placeholder="Scrivi un messaggio..." />
+        <button (click)="sendMessage()">Invia</button>
+      </div>
+    </div>
+  </div>
+  
