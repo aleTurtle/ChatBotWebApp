@@ -11,13 +11,17 @@ interface BotResponse {
   providedIn: 'root',
 })
 export class ChatService {
-  private apiUrl = '/webhooks/rest/webhook'; // Endpoint del server Rasa solo il percorso relativo dato che il resto è nel cors
+  // URL dell'API del tuo backend
+  private apiUrl = 'http://localhost:3000/api/chat'; // Cambia con l'endpoint corretto del tuo backend
 
   constructor(private http: HttpClient) {}
 
-  // Metodo per inviare il messaggio al backend
+  // Metodo per inviare il messaggio dell'utente al backend
   sendMessage(userMessage: string): Observable<BotResponse[]> {
-    const payload = { message: userMessage }; // Corpo della richiesta
+    // Corpo della richiesta da inviare al backend
+    const payload = { message: userMessage };
+
+    // Effettua la richiesta POST e ritorna un Observable
     return this.http.post<BotResponse[]>(this.apiUrl, payload);
   }
 }
