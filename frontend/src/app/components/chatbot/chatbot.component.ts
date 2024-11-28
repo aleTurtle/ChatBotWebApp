@@ -1,8 +1,7 @@
 import { Component } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { FormsModule } from '@angular/forms'; // Per l'input utente
-import { ChatService } from '../../services/chat.service';
-
+import { ChatService } from '../../services/chat.service'; // Importa il servizio ChatService
 
 @Component({
   selector: 'app-chatbot',
@@ -27,17 +26,17 @@ export class ChatbotComponent {
   messages = [{ user: false, text: 'Benvenuto! Come posso aiutarti oggi?' }];
   userInput = '';
 
-  constructor(private chatService: ChatService) {}
+  constructor(private chatService: ChatService) {
+    // Aggiungi questo log per verificare che il ChatService venga iniettato correttamente
+    console.log('ChatService:', chatService);
+  }
+
   sendMessage() {
     if (this.userInput.trim()) {
-      // Aggiungi il messaggio dell'utente alla chat
       this.messages.push({ user: true, text: this.userInput });
-
-      // Invia il messaggio al backend tramite il ChatService
       this.chatService.sendMessage(this.userInput).subscribe(
         (response) => {
           response.forEach((msg) => {
-            // Aggiungi ogni messaggio del bot alla chat
             this.messages.push({ user: false, text: msg.text });
           });
         },
@@ -49,8 +48,6 @@ export class ChatbotComponent {
           });
         }
       );
-
-      // Resetta l'input dell'utente
       this.userInput = '';
     }
   }
