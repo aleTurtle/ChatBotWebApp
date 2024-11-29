@@ -1,4 +1,4 @@
-import { Component } from '@angular/core';
+import { Component, OnInit } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { FormsModule } from '@angular/forms'; // Per l'input utente
 import { ChatService } from '../../services/chat.service'; // Importa il servizio ChatService
@@ -7,28 +7,29 @@ import { ChatService } from '../../services/chat.service'; // Importa il servizi
   selector: 'app-chatbot',
   standalone: true,
   imports: [CommonModule, FormsModule],
-  template: `
-    <div class="chat-container">
-      <div class="messages">
-        <div *ngFor="let message of messages" [class.user]="message.user">
-          <p>{{ message.text }}</p>
-        </div>
-      </div>
-      <div class="input-container">
-        <input [(ngModel)]="userInput" placeholder="Scrivi la tua domanda..." />
-        <button (click)="sendMessage()">Invia</button>
+  template: `<div class="chat-container">
+    <div class="messages">
+      <div *ngFor="let message of messages" [class.user]="message.user">
+        <p>{{ message.text }}</p>
       </div>
     </div>
-  `,
+    <div class="input-container">
+      <input [(ngModel)]="userInput" placeholder="Scrivi la tua domanda..." />
+      <button (click)="sendMessage()">Invia</button>
+    </div>
+  </div>
+`,
   styleUrls: ['./chatbot.component.scss'],
 })
-export class ChatbotComponent {
+export class ChatbotComponent implements OnInit {
   messages = [{ user: false, text: 'Benvenuto! Come posso aiutarti oggi?' }];
   userInput = '';
 
-  constructor(private chatService: ChatService) {
-    // Aggiungi questo log per verificare che il ChatService venga iniettato correttamente
-    console.log('ChatService:', chatService);
+  constructor(private chatService: ChatService) {}
+
+  ngOnInit() {
+    // Log per verificare l'iniezione di ChatService
+    console.log('ChatService iniettato:', this.chatService);
   }
 
   sendMessage() {

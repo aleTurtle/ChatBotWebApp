@@ -12,7 +12,7 @@ interface BotResponse {
 })
 export class ChatService {
   // URL dell'API del tuo backend
-  private apiUrl = 'http://localhost:3000/api/chat'; // Cambia con l'endpoint corretto del tuo backend
+  private apiUrl = 'http://localhost:3000/api/chat'; // endpoint  del tuo backend
 
   constructor(private http: HttpClient) {}
 

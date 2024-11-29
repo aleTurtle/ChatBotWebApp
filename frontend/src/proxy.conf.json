@@ -1,6 +1,6 @@
 {
-    "/webhooks/rest/webhook": {
-      "target": "http://localhost:5005",
+    "/api/chat": {
+      "target": "http://localhost:3000",
       "secure": false,
       "changeOrigin": true,
       "logLevel": "debug"
