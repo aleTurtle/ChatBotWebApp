@@ -34,12 +34,17 @@ export class ChatbotComponent implements OnInit {
 
   sendMessage() {
     if (this.userInput.trim()) {
+      console.log('Messaggio inviato:', this.userInput);
       this.messages.push({ user: true, text: this.userInput });
+  
       this.chatService.sendMessage(this.userInput).subscribe(
         (response) => {
-          response.forEach((msg) => {
-            this.messages.push({ user: false, text: msg.text });
-          });
+          console.log('Risposta dal backend:', response);
+          
+          // Accedi al primo oggetto nell'array 'responses' (poiché c'è solo un oggetto)
+          if (response.responses && response.responses.length > 0) {
+            this.messages.push({ user: false, text: response.responses[0].text });
+          }
         },
         (error) => {
           console.error('Errore nella comunicazione con il backend:', error);
@@ -52,4 +57,5 @@ export class ChatbotComponent implements OnInit {
       this.userInput = '';
     }
   }
+  
 }

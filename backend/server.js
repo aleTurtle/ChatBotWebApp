@@ -40,11 +40,11 @@ app.get('/', (req, res) => {
   res.send('Benvenuto nel chatbot dell\'università!');
 });
 
-// Endpoint per inviare messaggi a Rasa
-app.post('/api/message', async (req, res) => {
-  const { message, sender } = req.body; // Estrarre il messaggio e il mittente dal corpo della richiesta
+// Endpoint per inviare per comunicare con il bot 
+app.post('/api/chat', async (req, res) => {
+  const { message } = req.body; // Estrarre il messaggio e il mittente dal corpo della richiesta
 
-  if (!message || !sender) {
+  if (!message ) {
     return res.status(400).json({ error: 'Message and sender are required' });
   }
 
@@ -63,7 +63,7 @@ const lezioniRoutes = require('./src/routes/lezioni'); // Importa il modulo dell
 app.use('/lezioni', lezioniRoutes); // Usa le routes
 
 const chatRoutes = require('./src/routes/chat'); // Importa il modulo delle routes
-app.use('/api/chat', chatRoutes); // Usa le routes
+app.use('/chat', chatRoutes); // Usa le routes
 
 
 
