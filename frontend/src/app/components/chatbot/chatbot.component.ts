@@ -7,17 +7,37 @@ import { ChatService } from '../../services/chat.service'; // Importa il servizi
   selector: 'app-chatbot',
   standalone: true,
   imports: [CommonModule, FormsModule],
-  template: `<div class="chat-container">
-    <div class="messages">
-      <div *ngFor="let message of messages" [class.user]="message.user">
+  template: ` <div class="chat-window p-4 bg-gray-100 rounded-lg shadow-md w-full max-w-md mx-auto mt-8">
+  <div class="messages space-y-4">
+    <!-- Mostra ogni messaggio -->
+    <div
+      *ngFor="let message of messages"
+      class="message flex"
+      [ngClass]="{ 'justify-end': message.user, 'justify-start': !message.user }"
+    >
+      <div
+        class="max-w-[75%] p-2 rounded-lg shadow-sm"
+        [ngClass]="{
+          'bg-blue-500 text-white self-end': message.user,
+          'bg-white text-gray-800 self-start': !message.user
+        }"
+      >
         <p>{{ message.text }}</p>
       </div>
     </div>
-    <div class="input-container">
-      <input [(ngModel)]="userInput" placeholder="Scrivi la tua domanda..." />
-      <button (click)="sendMessage()">Invia</button>
-    </div>
   </div>
+
+  <div class="input-box">
+    <textarea 
+      [(ngModel)]="userInput" 
+      placeholder="Scrivi un messaggio..." 
+      (keydown.enter)="sendMessage()" 
+      rows="1"></textarea>
+    <button (click)="sendMessage()">
+      <span class="send-icon">➤</span>
+    </button>
+  </div>
+</div>
 `,
   styleUrls: ['./chatbot.component.scss'],
 })
