@@ -2,7 +2,7 @@
   max-width: 1200px;
   width: 100%;
   margin: 20px auto;
-  background-color: #f7fafc; /* colore sfondo della chat */
+  background-color: #f7fafc; /* Colore sfondo della chat */
   border-radius: 10px;
   box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
   display: flex;
@@ -34,7 +34,6 @@
   }
 
   div {
-    max-width: 85%;
     padding: 12px;
     border-radius: 20px;
     box-shadow: none; /* Rimuove l'ombra dal contenitore */
@@ -47,14 +46,16 @@
   div.user {
     color: #101010;
     background-color: transparent; /* Sfondo trasparente per il messaggio dell'utente */
-    max-width: 95%; /* Allarga la larghezza al 95% per il messaggio dell'utente */
+    max-width: 90%; /* Larghezza più ampia per il messaggio dell'utente (90% della finestra) */
+    margin-left: auto; /* Allinea il messaggio dell'utente a destra */
   }
 
   /* Messaggio del bot */
   div.bot {
     color: #2d3748;
     background-color: transparent; /* Sfondo trasparente per il messaggio del bot */
-    max-width: 70%; /* Mantieni la larghezza del messaggio del bot al 70% */
+    max-width: 70%; /* Larghezza più contenuta per il messaggio del bot */
+    margin-left: 10px; /* Distanza tra l'icona e il messaggio del bot */
   }
 }
 
