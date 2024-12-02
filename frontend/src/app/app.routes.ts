@@ -2,9 +2,12 @@ import { Routes } from '@angular/router';
 import { ChatbotComponent } from './components/chatbot/chatbot.component';
 import { HomeComponent } from './components/home/home.component'; // Importa il componente Home
 import { AboutComponent } from './components/about/about.component';
+import { LoginComponent } from './components/login/login.component';
 
 export const routes: Routes = [
   { path: '', component: HomeComponent }, // Home page
+
+  {path: 'login', component: LoginComponent}, // pagina di login 
 
   { path: 'chatbot', component: ChatbotComponent }, // Chatbot page
 

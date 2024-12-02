@@ -1,0 +1,105 @@
+/* login.component.scss */
+
+/* Layout principale */
+.login-page {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    height: 100vh;
+    background: linear-gradient(135deg, #3182ce, #63b3ed); /* Colori accattivanti */
+    font-family: Arial, sans-serif;
+  }
+  
+  /* Box di login */
+  .login-box {
+    background: #ffffff;
+    padding: 40px;
+    border-radius: 10px;
+    box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+    text-align: center;
+    width: 100%;
+    max-width: 400px;
+  }
+  
+  .login-box h1 {
+    margin-bottom: 10px;
+    font-size: 2rem;
+    color: #2d3748;
+  }
+  
+  .login-box p {
+    margin-bottom: 20px;
+    color: #718096;
+  }
+  
+  /* Stile del form */
+  .form-group {
+    margin-bottom: 20px;
+    text-align: left;
+  }
+  
+  label {
+    display: block;
+    margin-bottom: 5px;
+    font-weight: bold;
+    color: #2d3748;
+  }
+  
+  input {
+    width: 100%;
+    padding: 10px;
+    border: 1px solid #cbd5e0;
+    border-radius: 5px;
+    font-size: 1rem;
+    color: #4a5568;
+  }
+  
+  input:focus {
+    outline: none;
+    border-color: #3182ce;
+    box-shadow: 0 0 0 3px rgba(49, 130, 206, 0.3);
+  }
+  
+  .error {
+    color: #e53e3e;
+    font-size: 0.875rem;
+    margin-top: 5px;
+  }
+  
+  /* Pulsante di submit */
+  button {
+    width: 100%;
+    padding: 10px;
+    background: #3182ce;
+    color: white;
+    border: none;
+    border-radius: 5px;
+    font-size: 1rem;
+    font-weight: bold;
+    cursor: pointer;
+  }
+  
+  button:disabled {
+    background: #a0aec0;
+    cursor: not-allowed;
+  }
+  
+  button:hover:not(:disabled) {
+    background: #2b6cb0;
+  }
+  
+  /* Link di registrazione */
+  .signup-link {
+    margin-top: 20px;
+    color: #718096;
+  }
+  
+  .signup-link a {
+    color: #3182ce;
+    text-decoration: none;
+  }
+  
+  .signup-link a:hover {
+    text-decoration: underline;
+  }
+  

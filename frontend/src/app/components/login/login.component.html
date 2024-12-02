@@ -1,0 +1,50 @@
+<div class="login-page">
+    <div class="login-box">
+      <h1>Login</h1>
+      <p>Accedi per utilizzare S Y N C H R O, il tuo assistente universitario.</p>
+      
+      <form (ngSubmit)="onSubmit()" #loginForm="ngForm">
+        <!-- Email -->
+        <div class="form-group">
+          <label for="email">Email Universitaria</label>
+          <input 
+            type="email" 
+            id="email" 
+            name="email" 
+            required 
+            [(ngModel)]="email" 
+            #emailInput="ngModel"
+            placeholder="esempio@studenti.universita.it"
+          />
+          <div class="error" *ngIf="emailInput.invalid && emailInput.touched">
+            L'email è obbligatoria e deve essere valida.
+          </div>
+        </div>
+  
+        <!-- Password -->
+        <div class="form-group">
+          <label for="password">Password</label>
+          <input 
+            type="password" 
+            id="password" 
+            name="password" 
+            required 
+            [(ngModel)]="password" 
+            #passwordInput="ngModel"
+            placeholder="Inserisci la tua password"
+          />
+          <div class="error" *ngIf="passwordInput.invalid && passwordInput.touched">
+            La password è obbligatoria.
+          </div>
+        </div>
+  
+        <!-- Submit -->
+        <button type="submit" [disabled]="loginForm.invalid">Accedi</button>
+      </form>
+      
+      <p class="signup-link">
+        Non hai un account? <a routerLink="/signup">Registrati</a>
+      </p>
+    </div>
+  </div>
+  
