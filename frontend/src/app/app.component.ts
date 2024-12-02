@@ -8,7 +8,17 @@ import { ChatbotComponent } from './components/chatbot/chatbot.component'; // Pe
   imports: [RouterOutlet, ChatbotComponent], // Aggiungi il ChatbotComponent ai moduli importati
   template: `
     <div class="app-container">
-      <h1>University Chatbot</h1>
+      <!-- Navbar con il titolo S Y N C H R O all'interno -->
+      <nav class="navbar">
+        <h1 class="title">S Y N C H R O</h1>
+        <ul class="navbar-menu">
+          <li><a href="#" class="navbar-link">Home</a></li>
+          <li><a href="#" class="navbar-link">About</a></li>
+          <li><a href="#" class="navbar-link">Contact</a></li>
+        </ul>
+      </nav>
+
+      <!-- Contenuto della tua app -->
       <router-outlet></router-outlet>
     </div>
   `,

@@ -1,14 +1,29 @@
 .chat-window {
-  max-width: 100%;
-  margin: 0 auto;
-  background-color: #f7fafc;
+  max-width: 1200px;
+  width: 100%;
+  margin: 20px auto;
+  background-color: #f7fafc; /* colore sfondo della chat */
   border-radius: 10px;
   box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between;
+  height: 80vh;
+  position: relative;
+}
+
+.messages {
+  flex: 1;
+  padding: 10px;
+  overflow-y: auto;
 }
 
 .message {
   display: flex;
+  align-items: center; /* Centra verticalmente immagine e testo */
   margin-bottom: 8px;
+  background-color: transparent; /* Rende trasparente il contenitore del messaggio */
+  padding: 0; /* Rimuove il padding extra */
 
   &.justify-end {
     justify-content: flex-end;
@@ -19,19 +34,104 @@
   }
 
   div {
-    max-width: 75%;
+    max-width: 85%;
     padding: 12px;
-    border-radius: 8px;
-    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+    border-radius: 20px;
+    box-shadow: none; /* Rimuove l'ombra dal contenitore */
+    display: flex;
+    align-items: center; /* Allinea immagine e testo verticalmente */
+    background-color: transparent; /* Rende trasparente il contenitore del testo */
   }
 
+  /* Messaggio dell'utente */
   div.user {
-    background-color: #3182ce;
-    color: #ffffff;
+    color: #101010;
+    background-color: transparent; /* Sfondo trasparente per il messaggio dell'utente */
+    max-width: 95%; /* Allarga la larghezza al 95% per il messaggio dell'utente */
   }
 
+  /* Messaggio del bot */
   div.bot {
-    background-color: #ffffff;
     color: #2d3748;
+    background-color: transparent; /* Sfondo trasparente per il messaggio del bot */
+    max-width: 70%; /* Mantieni la larghezza del messaggio del bot al 70% */
+  }
+}
+
+.chat-icon {
+  width: 40px; /* Impostiamo una larghezza fissa per l'icona */
+  height: 40px; /* Impostiamo un'altezza fissa per l'icona */
+  border-radius: 50%; /* Mantiene l'immagine rotonda */
+  margin-right: 10px; /* Distanza tra l'icona e il messaggio */
+  display: inline-block;
+
+  img {
+    width: 100%; /* Adatta l'immagine alla larghezza del contenitore */
+    height: 100%; /* Adatta l'immagine all'altezza del contenitore */
+    object-fit: contain; /* Mantiene il rapporto di aspetto senza distorsioni */
+  }
+}
+
+.loading-spinner {
+  position: absolute;
+  top: 50%;
+  left: 20px;
+  transform: translateY(-50%);
+  z-index: 10;
+}
+
+.spinner {
+  border: 4px solid #f3f3f3;
+  border-top: 4px solid #3182ce;
+  border-radius: 50%;
+  width: 40px;
+  height: 40px;
+  animation: spin 2s linear infinite;
+}
+
+@keyframes spin {
+  0% {
+    transform: rotate(0deg);
+  }
+  100% {
+    transform: rotate(360deg);
+  }
+}
+
+.input-box {
+  display: flex;
+  align-items: center;
+  padding: 10px;
+  background-color: white;
+  border-top: 1px solid #ddd;
+
+  textarea {
+    flex: 1;
+    border: 1px solid #ddd;
+    border-radius: 20px;
+    padding: 10px 15px;
+    font-size: 14px;
+    resize: none;
+    outline: none;
+  }
+
+  button {
+    margin-left: 10px;
+    background-color: #3182ce;
+    color: white;
+    border: none;
+    border-radius: 50%;
+    width: 40px;
+    height: 40px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    cursor: pointer;
+    font-size: 18px;
+    transition: background-color 0.3s;
+
+    &:hover {
+      background-color: #2c5282;
+    }
   }
 }
