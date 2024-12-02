@@ -1,20 +1,20 @@
 import { Component } from '@angular/core';
 import { RouterOutlet } from '@angular/router';
-//import { ChatbotComponent } from './components/chatbot/chatbot.component'; // Percorso corretto al tuo ChatbotComponent
 
 @Component({
   selector: 'app-root',
   standalone: true,
-  imports: [RouterOutlet], // Aggiungi il ChatbotComponent ai moduli importati
+  imports: [RouterOutlet], 
   template: `
     <div class="app-container">
-      <!-- Navbar con il titolo S Y N C H R O all'interno -->
+      <!-- Navbar con il titolo S Y N C H R O -->
       <nav class="navbar">
         <h1 class="title">S Y N C H R O</h1>
         <ul class="navbar-menu">
-          <li><a href="#" class="navbar-link">Home</a></li>
-          <li><a href="#" class="navbar-link">About</a></li>
-          <li><a href="#" class="navbar-link">Contact</a></li>
+          <!-- Usa routerLink per collegare alla home -->
+          <li><a routerLink="/home" class="navbar-link">Home</a></li>
+          <li><a routerLink="/about" class="navbar-link">About</a></li>
+          <li><a routerLink="/contact" class="navbar-link">Contact</a></li>
         </ul>
       </nav>
 
