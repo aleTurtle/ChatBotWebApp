@@ -1,51 +1,59 @@
 import { Component, OnInit } from '@angular/core';
 import { CommonModule } from '@angular/common';
-import { FormsModule } from '@angular/forms'; // Per l'input utente
-import { ChatService } from '../../services/chat.service'; // Importa il servizio ChatService
+import { FormsModule } from '@angular/forms';
+import { ChatService } from '../../services/chat.service';
 
 @Component({
   selector: 'app-chatbot',
   standalone: true,
   imports: [CommonModule, FormsModule],
   template: `
+    <!-- Sidebar -->
+    <div class="sidebar" [ngClass]="{ 'open': sidebarOpen }">
+      <div class="sidebar-content">
+        <h3>Menu Sidebar</h3>
+        <ul>
+          <li *ngFor="let conversation of placeholderConversations">
+            {{ conversation.name }}
+          </li>
+        </ul>
+      </div>
+    </div>
 
-      <!-- Chat Window -->
-      <div class="chat-window" [ngClass]="chatWindowClass">
-        <!-- Area dei messaggi -->
-        <div class="messages">
-          <div *ngFor="let message of messages; let i = index" [ngClass]="{ 'message': true, 'justify-end': message.user, 'justify-start': !message.user }">
-            <div [ngClass]="{ 'user': message.user, 'bot': !message.user }">
-              <!-- Icona del chatbot accanto al messaggio del bot -->
-              <div *ngIf="!message.user" class="chatbot-icon">
-                <img src="assets/images/autobot.png" alt="Chatbot Icon" />
-              </div>
-              <!-- Mostra lo spinner solo per l'ultimo messaggio del bot in caricamento -->
-              <div class="message-text">
-                <ng-container *ngIf="loadingIndex !== i; else loadingSpinner">
-                  {{ message.text }}
-                </ng-container>
-                <!-- Template dello spinner -->
-                <ng-template #loadingSpinner>
-                  <div class="spinner"></div>
-                </ng-template>
-              </div>
+    <!-- Chat Window -->
+    <div class="chat-window" [ngClass]="chatWindowClass">
+      <!-- Area dei messaggi -->
+      <div class="messages">
+        <div *ngFor="let message of messages; let i = index" [ngClass]="{ 'message': true, 'justify-end': message.user, 'justify-start': !message.user }">
+          <div [ngClass]="{ 'user': message.user, 'bot': !message.user }">
+            <!-- Icona del chatbot accanto al messaggio del bot -->
+            <div *ngIf="!message.user" class="chatbot-icon">
+              <img src="assets/images/autobot.png" alt="Chatbot Icon" />
+            </div>
+            <!-- Mostra lo spinner solo per l'ultimo messaggio del bot in caricamento -->
+            <div class="message-text">
+              <ng-container *ngIf="loadingIndex !== i; else loadingSpinner">
+                {{ message.text }}
+              </ng-container>
+              <!-- Template dello spinner -->
+              <ng-template #loadingSpinner>
+                <div class="spinner"></div>
+              </ng-template>
             </div>
           </div>
         </div>
-        <!-- Input Box -->
-        <div class="input-box">
-          <textarea 
-            [(ngModel)]="userInput" 
-            placeholder="Scrivi un messaggio..." 
-            (keydown.enter)="sendMessage()" 
-            rows="1">
-          </textarea>
-          <button (click)="sendMessage()">
-            <span class="send-icon">➤</span>
-          </button>
-        </div>
       </div>
-  
+      <!-- Input Box -->
+      <div class="input-box">
+        <textarea [(ngModel)]="userInput" placeholder="Scrivi un messaggio..." (keydown.enter)="sendMessage()" rows="1"></textarea>
+        <button (click)="sendMessage()">
+          <span class="send-icon">➤</span>
+        </button>
+      </div>
+    </div>
+
+    <!-- Pulsante per aprire/chiudere la sidebar -->
+    <button class="sidebar-toggle-button" (click)="toggleSidebar()">☰</button>
   `,
   styleUrls: ['./chatbot.component.scss'],
 })
@@ -56,7 +64,7 @@ export class ChatbotComponent implements OnInit {
   loadingIndex: number | null = null;
 
   // Stato della sidebar
-  sidebarOpen = true;
+  sidebarOpen = false;
 
   // Array di conversazioni fittizie
   placeholderConversations = [
