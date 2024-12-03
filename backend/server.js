@@ -63,7 +63,7 @@ const lezioniRoutes = require('./src/routes/lezioni'); // Importa il modulo dell
 app.use('/lezioni', lezioniRoutes); // Usa le routes
 
 const chatRoutes = require('./src/routes/chat'); // Importa il modulo delle routes
-app.use('/chat', chatRoutes); // Usa le routes
+app.use('/api/chat', chatRoutes); // Usa le routes
 
 
 

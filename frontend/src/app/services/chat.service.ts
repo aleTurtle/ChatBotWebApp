@@ -1,6 +1,7 @@
 import { Injectable } from '@angular/core';
 import { HttpClient } from '@angular/common/http';
 import { Observable } from 'rxjs';
+import { environment } from '../../environments/environment.development';
 
 interface BotResponse {
   responses: { text: string }[]; 
@@ -15,6 +16,6 @@ export class ChatService {
 
   sendMessage(userMessage: string): Observable<BotResponse> {
     const payload = { message: userMessage };
-    return this.http.post<BotResponse>('/api/chat', payload);  // Chiamata al proxy, che sarà reindirizzata a localhost:3000/chat
+    return this.http.post<BotResponse>(environment.baseUrl+'/api/chat', payload);  // Chiamata al proxy, che sarà reindirizzata a localhost:3000/chat
   }
 }

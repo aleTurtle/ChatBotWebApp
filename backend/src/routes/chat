@@ -4,7 +4,7 @@ const axios = require("axios"); // Per inviare richieste HTTP
 
 /**
  * @swagger
- * /chat:
+ * /api/chat:
  *   post:
  *     summary: Invia un messaggio al server Rasa
  *     description: Questo endpoint invia un messaggio al server Rasa e restituisce la risposta.
