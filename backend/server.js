@@ -10,6 +10,7 @@ const express = require('express');
 const connectDB = require('./src/config/db'); // Importa la funzione di connessione al DB
 const swaggerUi = require('swagger-ui-express'); // Interfaccia Swagger
 const swaggerSpecs = require('./src/config/swaggerDef'); // Configurazione Swagger
+const Message = require('./src/models/Message'); // Modello per il salvataggio dei messaggi
 
 
 // Importa il motore NLP
@@ -50,7 +51,28 @@ app.post('/api/chat', async (req, res) => {
 
   try {
     const rasaResponse = await rasaEngine.sendMessage(message); // Invia il messaggio a Rasa
-    res.json({ responses: rasaResponse }); // Invia la risposta al client
+
+    // Estrai il testo dalla risposta di Rasa
+    const botResponseText = rasaResponse[0]?.text || 'Errore nella risposta del bot';
+
+    // Salva il messaggio dell'utente nel database
+    const userMessage = new Message({
+    message: message, // Messaggio dell'utente
+    sender: 'user', // Indica che è un messaggio dell'utente
+    });
+      await userMessage.save(); // Salva nel database
+
+// Salva la risposta del bot nel database
+const botMessage = new Message({
+  message: botResponseText, // Risposta del bot
+  sender: 'bot', // Indica che è un messaggio del bot
+});
+await botMessage.save(); // Salva nel database
+
+    //res.json({ responses: botResponseText }); // Invia la risposta al client
+    res.json({ responses: [{ text: botResponseText }] });
+    console.log('Risposta inviata al frontend:', { responses: [{ text: botResponseText }] });
+
   } catch (error) {
     console.error("Errore durante la comunicazione con Rasa:", error.message);
     res.status(500).json({ error: 'Internal server error' });
