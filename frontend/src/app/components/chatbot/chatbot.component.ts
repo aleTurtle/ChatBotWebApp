@@ -107,7 +107,7 @@ export class ChatbotComponent implements OnInit {
     const newConversation = {
       id: newConversationId,
       name: `Conversazione ${newConversationId}`,
-      messages: [{ user: false, text: 'Nuova conversazione iniziata!' }],
+      messages: [{ user: false, text: 'Iniziamo una nuova conversazione!' }],
     };
     this.conversations.push(newConversation);
     this.activeConversationId = newConversationId;
@@ -174,3 +174,4 @@ export class ChatbotComponent implements OnInit {
     }
   }
 }
+ 

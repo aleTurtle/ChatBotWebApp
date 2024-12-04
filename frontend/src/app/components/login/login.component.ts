@@ -1,24 +1,34 @@
 import { Component } from '@angular/core';
-import { CommonModule } from '@angular/common';
-import { FormsModule } from '@angular/forms'; // Importa FormsModule per ngModel e ngForm
+import { AuthService } from '../../services/auth.service';
+import { Router } from '@angular/router';
+import { AuthResponse } from '../../models/AuthResponse'; 
+import {AuthError} from '../../models/AuthError';
 
 @Component({
   selector: 'app-login',
-  standalone: true,
-  templateUrl: './login.component.html',
-  styleUrls: ['./login.component.scss'],
-  imports: [CommonModule, FormsModule], // Aggiungi i moduli necessari
+  template: `
+    <form (ngSubmit)="onSubmit()">
+      <input type="text" [(ngModel)]="username" placeholder="Username" name="username" required />
+      <input type="password" [(ngModel)]="password" placeholder="Password" name="password" required />
+      <button type="submit">Login</button>
+    </form>
+  `,
 })
 export class LoginComponent {
-  email = '';
+  username = '';
   password = '';
 
+  constructor(private authService: AuthService, private router: Router) {}
+
   onSubmit() {
-    if (this.email && this.password) {
-      console.log('Login attempt:', this.email, this.password);
-      // Effettua una chiamata al servizio di autenticazione
-    } else {
-      console.error('Form non valido!');
-    }
+    this.authService.login(this.username, this.password).subscribe(
+      (response: AuthResponse) => { 
+        this.authService.setToken(response.token);
+        this.router.navigate(['/chat']); // Redirigi alla chat
+      },
+      (error: AuthError) => {
+        alert('Errore: ' + error.error.message);
+      }
+    );
   }
 }

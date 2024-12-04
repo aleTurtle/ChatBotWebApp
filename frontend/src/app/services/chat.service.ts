@@ -12,8 +12,10 @@ export class ChatService {
 
   constructor(private http: HttpClient) {}
 
+   // Chiamata al proxy, che sarà reindirizzata a localhost:3000/api/chat
+
   sendMessage(userMessage: string): Observable<BotResponse> {
     const payload = { message: userMessage };
-    return this.http.post<BotResponse>(environment.baseUrl+'/api/chat', payload);  // Chiamata al proxy, che sarà reindirizzata a localhost:3000/api/chat
+    return this.http.post<BotResponse>(environment.baseUrl+'/api/chat', payload); 
   }
 }

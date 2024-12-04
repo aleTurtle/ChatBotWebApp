@@ -11,6 +11,7 @@ const connectDB = require('./src/config/db'); // Importa la funzione di connessi
 const swaggerUi = require('swagger-ui-express'); // Interfaccia Swagger
 const swaggerSpecs = require('./src/config/swaggerDef'); // Configurazione Swagger
 const Message = require('./src/models/Message'); // Modello per il salvataggio dei messaggi
+const authRoutes = require('./routes/auth');
 
 
 // Importa il motore NLP
@@ -29,6 +30,10 @@ const app = express();
 
 //app.use(express.json()); // Middleware per il parsing del corpo JSON
 app.use(bodyParser.json());
+
+// Rotte di autenticazione
+app.use('/api/auth', authRoutes);
+
 
 // Connessione al database MongoDB
 connectDB();  // Funzione di connessione al DB

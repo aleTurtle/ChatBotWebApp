@@ -1,9 +1,0 @@
-const express = require('express');
-const { getChatbot } = require('../controllers/chatbotController');
-
-const router = express.Router();
-
-// Ottieni il chatbot
-router.get('/', getChatbot);
-
-module.exports = router;
