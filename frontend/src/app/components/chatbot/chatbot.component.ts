@@ -1,4 +1,4 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, OnInit, ViewChild, ElementRef } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { FormsModule } from '@angular/forms';
 import { ChatService } from '../../services/chat.service';
@@ -29,12 +29,12 @@ import { ChatService } from '../../services/chat.service';
     <!-- Chat Window -->
     <div class="chat-window" [ngClass]="chatWindowClass">
       <!-- Area dei messaggi -->
-      <div class="messages">
+      <div class="messages" #messagesContainer>
         <div *ngFor="let message of messages; let i = index" [ngClass]="{ 'message': true, 'justify-end': message.user, 'justify-start': !message.user }">
           <div [ngClass]="{ 'user': message.user, 'bot': !message.user }">
             <!-- Icona del chatbot accanto al messaggio del bot -->
             <div *ngIf="!message.user" class="chatbot-icon">
-              <img src="assets/images/autobot.png" alt="Chatbot Icon" />
+              <img src="assets/images/mondo3.png" alt="Chatbot Icon" />
             </div>
             <!-- Mostra lo spinner solo per l'ultimo messaggio del bot in caricamento -->
             <div class="message-text">
@@ -55,6 +55,9 @@ import { ChatService } from '../../services/chat.service';
         <button (click)="sendMessage()">
           <span class="send-icon">➤</span>
         </button>
+          
+        <!-- Pulsante per scorrere la chat -->
+         <button class="bottom-chat-button" (click)="scrollToBottom()">↓</button>
       </div>
     </div>
 
@@ -64,6 +67,8 @@ import { ChatService } from '../../services/chat.service';
   styleUrls: ['./chatbot.component.scss'],
 })
 export class ChatbotComponent implements OnInit {
+  @ViewChild('messagesContainer') messagesContainer!: ElementRef;
+
   messages = [{ user: false, text: 'Benvenuto! Come posso aiutarti oggi?' }];
   userInput = '';
   loading = false;
@@ -146,6 +151,7 @@ export class ChatbotComponent implements OnInit {
           }
           this.loading = false;
           this.loadingIndex = null;
+          this.scrollToBottom(); // Scorri in fondo dopo la risposta
         },
         () => {
           if (currentConversation) {
@@ -153,9 +159,18 @@ export class ChatbotComponent implements OnInit {
           }
           this.loading = false;
           this.loadingIndex = null;
+          this.scrollToBottom(); // Scorri comunque
         }
       );
       this.userInput = '';
+      this.scrollToBottom(); // Scorri dopo aver aggiunto il messaggio dell'utente
+    }
+  }
+
+  scrollToBottom() {
+    if (this.messagesContainer) {
+      const nativeElement = this.messagesContainer.nativeElement;
+      nativeElement.scrollTo({ top: nativeElement.scrollHeight, behavior: 'smooth' });
     }
   }
 }

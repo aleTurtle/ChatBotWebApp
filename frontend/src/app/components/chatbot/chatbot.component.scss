@@ -140,6 +140,25 @@
       background-color: #2c5282;
     }
   }
+
+  chat-bottom-button {
+    background-color: #cb2042; // Colore di base
+    color: white;             // Colore del testo
+    border: none;             // Nessun bordo
+    border-radius: 50%;       // Forma circolare
+    width: 50px;              // Dimensione
+    height: 50px;
+    display: flex;            // Centra l'icona
+    justify-content: center;
+    align-items: center;
+    cursor: pointer;          // Cambia il cursore quando si passa sopra
+    font-size: 20px;          // Dimensione del testo o icona
+    transition: background-color 0.3s; // Animazione al passaggio del mouse
+  }
+  .chat-bottom-button:hover {
+    background-color: #2c5282; // Colore al passaggio del mouse
+  }
+
 }
 
 /* Sidebar */
