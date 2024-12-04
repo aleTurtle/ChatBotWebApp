@@ -11,12 +11,18 @@ import { ChatService } from '../../services/chat.service';
     <!-- Sidebar -->
     <div class="sidebar" [ngClass]="{ 'open': sidebarOpen }">
       <div class="sidebar-content">
-        <h3>Menu Sidebar</h3>
+        <h3>Conversazioni</h3>
         <ul>
-          <li *ngFor="let conversation of placeholderConversations">
+          <li
+            *ngFor="let conversation of conversations"
+            [class.active]="conversation.id === activeConversationId"
+            (click)="switchConversation(conversation.id)"
+          >
             {{ conversation.name }}
+            <button class="close-conversation" (click)="closeConversation(conversation.id); $event.stopPropagation()">✖</button>
           </li>
         </ul>
+        <button class="new-conversation" (click)="startNewConversation()">➕ Nuova Conversazione</button>
       </div>
     </div>
 
@@ -66,20 +72,17 @@ export class ChatbotComponent implements OnInit {
   // Stato della sidebar
   sidebarOpen = false;
 
-  // Array di conversazioni fittizie
-  placeholderConversations = [
-    { id: 1, name: 'Conversazione 1' },
-    { id: 2, name: 'Conversazione 2' },
-    { id: 3, name: 'Conversazione 3' },
-  ];
+  // Gestione delle conversazioni
+  conversations: Array<{ id: number; name: string; messages: Array<{ user: boolean; text: string }> }> = [];
+  activeConversationId: number | null = null; // ID della conversazione attiva
 
-  // Classe dinamica per la chat window
+  // Classe dinamica per la finestra di chat
   chatWindowClass = { reduced: true, centered: false };
 
   constructor(private chatService: ChatService) {}
 
   ngOnInit() {
-    console.log('ChatService iniettato:', this.chatService);
+    this.startNewConversation(); // Inizializza una nuova conversazione all'avvio
   }
 
   toggleSidebar() {
@@ -93,10 +96,44 @@ export class ChatbotComponent implements OnInit {
     }
   }
 
+  // Avvia una nuova conversazione
+  startNewConversation() {
+    const newConversationId = this.conversations.length + 1;
+    const newConversation = {
+      id: newConversationId,
+      name: `Conversazione ${newConversationId}`,
+      messages: [{ user: false, text: 'Nuova conversazione iniziata!' }],
+    };
+    this.conversations.push(newConversation);
+    this.activeConversationId = newConversationId;
+    this.messages = newConversation.messages;
+  }
+
+  // Passa a una conversazione esistente
+  switchConversation(conversationId: number) {
+    this.activeConversationId = conversationId;
+    const conversation = this.conversations.find((c) => c.id === conversationId);
+    if (conversation) {
+      this.messages = conversation.messages;
+    }
+  }
+
+  // Chiude una conversazione (opzionale)
+  closeConversation(conversationId: number) {
+    this.conversations = this.conversations.filter((c) => c.id !== conversationId);
+    if (this.activeConversationId === conversationId) {
+      this.activeConversationId = null;
+      this.messages = []; // Resetta i messaggi
+    }
+  }
+
   sendMessage() {
     if (this.userInput.trim()) {
-      console.log('Messaggio inviato:', this.userInput);
-      this.messages.push({ user: true, text: this.userInput });
+      const currentConversation = this.conversations.find((c) => c.id === this.activeConversationId);
+      if (currentConversation) {
+        currentConversation.messages.push({ user: true, text: this.userInput });
+      }
+
       const botIndex = this.messages.length;
       this.messages.push({ user: false, text: '' });
       this.loadingIndex = botIndex;
@@ -104,16 +141,16 @@ export class ChatbotComponent implements OnInit {
 
       this.chatService.sendMessage(this.userInput).subscribe(
         (response) => {
-          console.log('Risposta dal backend:', response);
-          if (response.responses && response.responses.length > 0) {
-            this.messages[botIndex].text = response.responses[0].text;
+          if (currentConversation) {
+            currentConversation.messages[botIndex] = { user: false, text: response.responses[0]?.text || 'Errore di risposta' };
           }
           this.loading = false;
           this.loadingIndex = null;
         },
-        (error) => {
-          console.error('Errore nella comunicazione con il backend:', error);
-          this.messages[botIndex].text = 'Errore: il bot non è disponibile al momento.';
+        () => {
+          if (currentConversation) {
+            currentConversation.messages[botIndex] = { user: false, text: 'Errore: il bot non è disponibile al momento.' };
+          }
           this.loading = false;
           this.loadingIndex = null;
         }
