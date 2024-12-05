@@ -2,7 +2,7 @@
     <header class="header">
       <div class="user-info">
         <!-- Icona utente con la lettera iniziale -->
-        <div class="user-icon">{{ username?.charAt(0).toUpperCase() }}</div>
+        <div class="user-icon">{{ userIcon }}</div>
         <span>Benvenuto, {{ username }}!</span>
       </div>
       <button class="logout-btn" (click)="logout()">Logout</button>
@@ -13,5 +13,4 @@
       <p>Questa è la tua area riservata. Puoi accedere ai tuoi dati e alle funzionalità disponibili.</p>
       <!-- Altre sezioni possono essere aggiunte qui -->
     </main>
-  </div>
-  
+</div>

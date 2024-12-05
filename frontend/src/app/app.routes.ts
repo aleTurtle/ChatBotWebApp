@@ -9,7 +9,7 @@ import { UserAuthenticatedComponent } from './components/user-authenticated/user
 export const routes: Routes = [
   { path: '', component: HomeComponent }, // Home page
 
-  {path: 'user', component: UserAuthenticatedComponent},
+  {path: 'user' , component: UserAuthenticatedComponent}, //pagina dell'utente autenticato
 
   { path: 'sign-up', component: SignupComponent}, // pagina per la registrazione
 

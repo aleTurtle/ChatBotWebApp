@@ -24,8 +24,13 @@ export class LoginComponent {
         // Salviamo il token ricevuto dalla risposta del login
         this.authService.setToken(response.token);
 
+        // Salviamo l'utente autenticato
+        const authenticatedUser: User = response.user; // Presupponiamo che la risposta contenga un oggetto `user`
+        this.authService.setAuthenticatedUser(authenticatedUser);
+
+
         // Reindirizziamo l'utente alla rotta della chat
-        this.router.navigate(['/chatbot']);  
+        this.router.navigate(['/user']);  
       },
       (error) => {
         // Gestiamo gli errori (es. credenziali errate)
