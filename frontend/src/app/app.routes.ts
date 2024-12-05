@@ -4,9 +4,12 @@ import { HomeComponent } from './components/home/home.component'; // Importa il 
 import { AboutComponent } from './components/about/about.component';
 import { LoginComponent } from './components/login/login.component';
 import { SignupComponent } from './components/signup/signup.component';
+import { UserAuthenticatedComponent } from './components/user-authenticated/user-authenticated.component';
 
 export const routes: Routes = [
   { path: '', component: HomeComponent }, // Home page
+
+  {path: 'user', component: UserAuthenticatedComponent},
 
   { path: 'sign-up', component: SignupComponent}, // pagina per la registrazione
 

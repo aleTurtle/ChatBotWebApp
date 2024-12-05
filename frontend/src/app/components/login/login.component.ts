@@ -1,9 +1,9 @@
 import { Component } from '@angular/core';
 import { AuthService } from '../../services/auth.service'; // Import del servizio AuthService
 import { Router } from '@angular/router'; // Import di Router per la navigazione
-//import { User } from '../../models/User'; // Import dell'interfaccia User
+import { User } from '../../models/User'; // Import dell'interfaccia User
 import { FormsModule } from '@angular/forms';
-import { environment } from '../../../environments/environment.development';
+//import { environment } from '../../../environments/environment.development';
 
 @Component({
   selector: 'app-login',
@@ -36,9 +36,3 @@ export class LoginComponent {
 }
 
 
-export interface User {
-  id?: number;
-  username: string;
-  password: string;
-  role: string;
-}
