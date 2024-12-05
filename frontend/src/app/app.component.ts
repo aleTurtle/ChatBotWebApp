@@ -14,8 +14,13 @@ import {  RouterLink, RouterOutlet} from '@angular/router';
           <!-- Usa routerLink per collegare alla home -->
           <li><a routerLink="/home" class="navbar-link">Home</a></li>
           <li><a routerLink="/about" class="navbar-link">About</a></li>
-          <li><a routerLink="/contact" class="navbar-link">Contact</a></li>
+          <li><a routerLink="/chatbot" class="navbar-link">Chatbot</a></li>
         </ul>
+        <!-- Aggiunta dei pulsanti di login e registrazione -->
+       <div class="navbar-buttons">
+      <button class="btn-login" routerLink="/login">Login</button>
+       <button class="btn-signup" routerLink="/sign-up">Sign Up</button>
+      </div>
       </nav>
 
       <!-- Contenuto della tua app -->

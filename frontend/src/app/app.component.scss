@@ -92,6 +92,46 @@
   transform: scaleX(1); /* Linea animata sotto i link */
 }
 
+/* Bottoni della navbar */
+.navbar-buttons {
+  display: flex;
+  gap: 10px;
+  position: absolute;
+  right: 70px;
+}
+
+.navbar-buttons .btn-login,
+.navbar-buttons .btn-signup {
+  padding: 8px 20px;
+  font-size: 14px;
+  border: none;
+  border-radius: 20px;
+  cursor: pointer;
+  transition: background-color 0.3s ease-in-out, transform 0.2s;
+}
+
+.navbar-buttons .btn-login {
+  background-color: #8a9093;
+  color: #fff;
+  
+}
+
+.navbar-buttons .btn-login:hover {
+  background-color: #8a9093;
+  color: #fff;
+  transform: scale(1.05);
+}
+
+.navbar-buttons .btn-signup {
+  background-color: #8a9093;
+  color: #fff;
+}
+
+.navbar-buttons .btn-signup:hover {
+  background-color: #cb2d4f;
+  transform: scale(1.05);
+}
+
 /* Stili per il contenuto principale */
 .app-container {
   text-align: center;

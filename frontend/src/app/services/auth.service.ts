@@ -13,12 +13,12 @@ export class AuthService {
 
   // Registrazione (Sign Up)
   signUp(username: string, password: string): Observable<AuthResponse> {
-    return this.http.post<AuthResponse>(environment.baseUrl+'/api/users/sign-up', { username, password });
+    return this.http.post<AuthResponse>(environment.baseUrl+'/api/sign-up', { username, password });
   }
 
   // Login
   login(username: string, password: string): Observable<AuthResponse> {
-    return this.http.post<AuthResponse>(environment.baseUrl+'/api/users/login', { username, password });
+    return this.http.post<AuthResponse>(environment.baseUrl+'/api/login', { username, password });
   }
 
   // Salva il token in localStorage

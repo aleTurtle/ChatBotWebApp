@@ -1,38 +1,28 @@
 import { Component } from '@angular/core';
-import { AuthService } from '../../services/auth.service';
-import { Router } from '@angular/router';
-import { AuthResponse } from '../../models/AuthResponse'; 
-import {AuthError} from '../../models/AuthError';
-import { FormsModule } from '@angular/forms'; 
-
+import { FormsModule } from '@angular/forms'; // Importa FormsModule per ngModel
 
 @Component({
   selector: 'app-login',
-  standalone:true,
-  imports:[FormsModule],
-  template: `
-    <form (ngSubmit)="onSubmit()">
-      <input type="text" [(ngModel)]="username" placeholder="Username" name="username" required />
-      <input type="password" [(ngModel)]="password" placeholder="Password" name="password" required />
-      <button type="submit">Login</button>
-    </form>
-  `,
+  standalone: true,
+  imports: [FormsModule],
+  templateUrl: './login.component.html',
+  styleUrls: ['./login.component.scss']
 })
 export class LoginComponent {
-  username = '';
-  password = '';
+  user: User = { username: '', password: '', role: '' }; // Oggetto user inizializzato
 
-  constructor(private authService: AuthService, private router: Router) {}
+  constructor() {}
 
   onSubmit() {
-    this.authService.login(this.username, this.password).subscribe(
-      (response: AuthResponse) => { 
-        this.authService.setToken(response.token);
-        this.router.navigate(['/chat']); // Redirigi alla chat
-      },
-      (error: AuthError) => {
-        alert('Errore: ' + error.error.message);
-      }
-    );
+    // Gestire la logica di invio del form (da implementare eventualmente con un servizio di login)
+    console.log(this.user);
+    alert(`Login con: ${this.user.username}`);
   }
+}
+
+export interface User {
+  id?: number;
+  username: string;
+  password: string;
+  role: string;
 }
