@@ -11,7 +11,7 @@ const connectDB = require('./src/config/db'); // Importa la funzione di connessi
 const swaggerUi = require('swagger-ui-express'); // Interfaccia Swagger
 const swaggerSpecs = require('./src/config/swaggerDef'); // Configurazione Swagger
 const Message = require('./src/models/Message'); // Modello per il salvataggio dei messaggi
-const authRoutes = require('./routes/auth');
+const User = require('./src/models/User'); //modello per il salvataggio degli utenti nel db 
 
 
 // Importa il motore NLP
@@ -30,10 +30,6 @@ const app = express();
 
 //app.use(express.json()); // Middleware per il parsing del corpo JSON
 app.use(bodyParser.json());
-
-// Rotte di autenticazione
-app.use('/api/auth', authRoutes);
-
 
 // Connessione al database MongoDB
 connectDB();  // Funzione di connessione al DB
@@ -85,6 +81,47 @@ await botMessage.save(); // Salva nel database
 });
 
 
+//Endpoint per inviare username e password per la registrazione
+app.post('/api/sign-up', async (req, res) => {
+  const { username,password } = req.body; // Estrarre il messaggio e il mittente dal corpo della richiesta
+
+  if (!username || !password) {
+    return res.status(400).json({ error: 'Username and password are required' });
+  }
+
+  try {
+    // Qui puoi gestire ulteriori operazioni per il servizio chat, se necessario
+    return res.status(200).json({ message: 'Registrazione riuscita'});
+  } catch (error) {
+    console.error('Errore nella registrazione:', error);
+    return res.status(500).json({ error: 'Errore del server durante la registrazione' });
+  }
+
+
+});
+
+
+
+//Endpoint per inviare username e password per la login
+app.post('/api/login', async (req, res) => {
+  const { username,password } = req.body; // Estrarre il messaggio e il mittente dal corpo della richiesta
+
+  if (!username || !password) {
+    return res.status(400).json({ error: 'Username and password are required' });
+  }
+
+  try {
+    // Qui puoi gestire ulteriori operazioni per il servizio chat, se necessario
+    return res.status(200).json({ message: 'Login riuscita'});
+  } catch (error) {
+    console.error('Errore nella registrazione:', error);
+    return res.status(500).json({ error: 'Errore del server durante la login' });
+  }
+
+
+});
+
+
 
 const lezioniRoutes = require('./src/routes/lezioni'); // Importa il modulo delle routes
 app.use('/lezioni', lezioniRoutes); // Usa le routes
@@ -92,7 +129,11 @@ app.use('/lezioni', lezioniRoutes); // Usa le routes
 const chatRoutes = require('./src/routes/chat'); // Importa il modulo delle routes
 app.use('/api/chat', chatRoutes); // Usa le routes
 
+const loginRoutes = require('./src/routes/login');
+app.use('/api/login', loginRoutes);// rotta di login
 
+const signupRoutes = require('./src/routes/signup');
+app.use('/api/sign-up', signupRoutes);// rotta per la registrazione
 
 
 

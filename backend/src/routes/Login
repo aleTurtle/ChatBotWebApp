@@ -1,0 +1,84 @@
+const express = require('express');
+const jwt = require('jsonwebtoken');
+const User = require('../models/User'); 
+const router = express.Router();
+
+/**
+ * @swagger
+ * components:
+ *   schemas:
+ *     LoginRequest:
+ *       type: object
+ *       required:
+ *         - username
+ *         - password
+ *       properties:
+ *         username:
+ *           type: string
+ *           description: Il nome utente dell'utente
+ *         password:
+ *           type: string
+ *           description: La password dell'utente
+ *       example:
+ *         username: johndoe
+ *         password: password123
+ *     LoginResponse:
+ *       type: object
+ *       properties:
+ *         token:
+ *           type: string
+ *           description: Il token JWT per l'autenticazione
+ *       example:
+ *         token: "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9..."
+ */
+
+/**
+ * @swagger
+ * /api/login:
+ *   post:
+ *     summary: Effettua il login dell'utente
+ *     tags: [Auth]
+ *     requestBody:
+ *       required: true
+ *       content:
+ *         application/json:
+ *           schema:
+ *             $ref: '#/components/schemas/LoginRequest'
+ *     responses:
+ *       200:
+ *         description: Login riuscito, ritorna un token JWT
+ *         content:
+ *           application/json:
+ *             schema:
+ *               $ref: '#/components/schemas/LoginResponse'
+ *       400:
+ *         description: Credenziali non valide
+ *       500:
+ *         description: Errore del server
+ */
+
+// Login dell'utente
+router.post("/", async (req, res) => {
+  const { username, password } = req.body;
+
+  try {
+    const user = await User.findOne({ username });
+    if (!user) {
+      return res.status(400).json({ message: 'Credenziali non valide' });
+    }
+
+    const isMatch = await user.comparePassword(password);
+    if (!isMatch) {
+      return res.status(400).json({ message: 'Credenziali non valide' });
+    }
+
+    const token = jwt.sign({ userId: user._id }, process.env.JWT_SECRET, { expiresIn: '1h' });
+
+    res.json({ token });
+  } catch (error) {
+    console.error(error);
+    res.status(500).json({ message: 'Errore del server' });
+  }
+});
+
+module.exports = router;

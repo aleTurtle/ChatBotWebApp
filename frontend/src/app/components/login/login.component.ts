@@ -3,9 +3,13 @@ import { AuthService } from '../../services/auth.service';
 import { Router } from '@angular/router';
 import { AuthResponse } from '../../models/AuthResponse'; 
 import {AuthError} from '../../models/AuthError';
+import { FormsModule } from '@angular/forms'; 
+
 
 @Component({
   selector: 'app-login',
+  standalone:true,
+  imports:[FormsModule],
   template: `
     <form (ngSubmit)="onSubmit()">
       <input type="text" [(ngModel)]="username" placeholder="Username" name="username" required />
