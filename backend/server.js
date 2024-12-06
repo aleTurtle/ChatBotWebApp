@@ -109,16 +109,32 @@ app.post('/api/login', async (req, res) => {
   if (!username || !password) {
     return res.status(400).json({ error: 'Username and password are required' });
   }
-
   try {
-    // Qui puoi gestire ulteriori operazioni per il servizio chat, se necessario
-    return res.status(200).json({ message: 'Login riuscita'});
+    // Trova l'utente nel database
+    const user = await User.findOne({ username });
+    if (!user) {
+      return res.status(400).json({ error: 'Utente già esistente' });
+    }
+
+    // Confronta la password (presupponendo che il modello User abbia un metodo comparePassword)
+    const isMatch = await user.comparePassword(password);
+    if (!isMatch) {
+      return res.status(400).json({ error: 'Invalid credentials' });
+    }
+
+    // Genera il token JWT
+    const token = jwt.sign(
+      { userId: user._id }, // Payload del token
+      process.env.JWT_SECRET, // Chiave segreta (definita in variabili d'ambiente)
+      { expiresIn: '1h' } // Scadenza del token
+    );
+
+    // Restituisci il token nella risposta
+    return res.status(200).json({ token });
   } catch (error) {
-    console.error('Errore nella registrazione:', error);
+    console.error('Errore durante il login:', error);
     return res.status(500).json({ error: 'Errore del server durante la login' });
   }
-
-
 });
 
 

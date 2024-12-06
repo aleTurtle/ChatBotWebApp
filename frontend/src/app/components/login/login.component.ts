@@ -21,8 +21,21 @@ export class LoginComponent {
     // Chiamata al servizio di autenticazione per effettuare il login
     this.authService.login(this.user.username, this.user.password).subscribe(
       (response) => {
+        console.log('Risposta del server:', response);
+
+         // Verifica che la risposta contenga un token
+      if (!response.token || typeof response.token !== 'string') {
+        alert('Errore: il token non è valido o è mancante nella risposta del server.');
+        return;
+      }
         // Salviamo il token ricevuto dalla risposta del login
         this.authService.setToken(response.token);
+
+        // Verifica che l'oggetto utente sia presente e contenga un username
+      if (!response.user || !response.user.username) {
+        alert('Errore: dati dell\'utente mancanti o non validi.');
+        return;
+      }
 
         // Salviamo l'utente autenticato
         const authenticatedUser: User = response.user; // Presupponiamo che la risposta contenga un oggetto `user`

@@ -24,18 +24,37 @@ export class AuthService {
     return this.http.post<AuthResponse>(environment.baseUrl+'/api/login', { username, password });
   }
 
-  // Salva il token in localStorage
-  setToken(token: string): void {
-    localStorage.setItem('authToken', token);
+   // Salva il token in localStorage
+   setToken(token: string): void {
+    try {
+      localStorage.setItem('authToken', token);
+    } catch (error) {
+      console.error('Errore nel salvataggio del token:', error);
+    }
   }
 
+   // Salva l'utente autenticato in localStorage
   setAuthenticatedUser(user: User): void {
-    localStorage.setItem(this.USER_KEY, JSON.stringify(user));
+    try {
+      const userJson = JSON.stringify(user);
+      localStorage.setItem(this.USER_KEY, userJson);
+    } catch (error) {
+      console.error('Errore nel salvataggio dell\'utente autenticato:', error);
+    }
   }
 
+  // Recupera l'utente autenticato
   getAuthenticatedUser(): User | null {
     const userData = localStorage.getItem(this.USER_KEY);
-    return userData ? JSON.parse(userData) : null;
+    if (!userData) {
+      return null;
+    }
+    try {
+      return JSON.parse(userData);
+    } catch (error) {
+      console.error('Errore nel parsing di userData:', error);
+      return null;
+    }
   }
 
   // Ottieni il token da localStorage
@@ -49,9 +68,13 @@ export class AuthService {
     return token ? true : false;
   }
 
-  // Logout (rimuove il token)
+  // Logout (rimuove il token e l'utente)
   logout(): void {
-    localStorage.removeItem('authToken');
-    localStorage.removeItem(this.USER_KEY);
+    try {
+      localStorage.removeItem('authToken');
+      localStorage.removeItem(this.USER_KEY);
+    } catch (error) {
+      console.error('Errore durante il logout:', error);
+    }
   }
 }
