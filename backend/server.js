@@ -12,7 +12,7 @@ const swaggerUi = require('swagger-ui-express'); // Interfaccia Swagger
 const swaggerSpecs = require('./src/config/swaggerDef'); // Configurazione Swagger
 const Message = require('./src/models/Message'); // Modello per il salvataggio dei messaggi
 const User = require('./src/models/User'); //modello per il salvataggio degli utenti nel db 
-
+const jwt = require('jsonwebtoken');//importa i moduli per la generazione del jwt
 
 // Importa il motore NLP
 const bodyParser = require('body-parser'); // Per elaborare il corpo delle richieste
@@ -85,18 +85,34 @@ await botMessage.save(); // Salva nel database
 app.post('/api/sign-up', async (req, res) => {
   const { username,password } = req.body; // Estrarre il messaggio e il mittente dal corpo della richiesta
 
-  if (!username || !password) {
-    return res.status(400).json({ error: 'Username and password are required' });
+  // Validazione dei dati in ingresso
+  if (!username || typeof username !== 'string' || !password || typeof password !== 'string') {
+    return res.status(400).json({ error: 'Username e password sono obbligatori e devono essere stringhe' });
   }
 
   try {
-    // Qui puoi gestire ulteriori operazioni per il servizio chat, se necessario
-    return res.status(200).json({ message: 'Registrazione riuscita'});
+
+    // Verifica se l'utente esiste già
+    const existingUser = await User.findOne({username});
+    if(existingUser){
+      return res.status(400).json({error:'Utente già in uso'});
+    }
+
+    //Crea il nuovo utente
+    const newUser = new User({
+      username,
+      password, //password hashata automaticamente grazie al middleware nel modello user
+    });
+
+    //Salva il nuovo utente creato nel db
+    await newUser.save();
+
+  // Risposta di successo
+    return res.status(201).json({ message: 'Registrazione riuscita', userId: newUser._id });
   } catch (error) {
     console.error('Errore nella registrazione:', error);
     return res.status(500).json({ error: 'Errore del server durante la registrazione' });
   }
-
 
 });
 
@@ -106,20 +122,29 @@ app.post('/api/sign-up', async (req, res) => {
 app.post('/api/login', async (req, res) => {
   const { username,password } = req.body; // Estrarre il messaggio e il mittente dal corpo della richiesta
 
-  if (!username || !password) {
-    return res.status(400).json({ error: 'Username and password are required' });
+  // Validazione dei dati in ingresso
+  if (!username || typeof username !== 'string' || !password || typeof password !== 'string') {
+    return res.status(400).json({ error: 'Username e password sono obbligatori e devono essere stringhe' });
   }
+
   try {
     // Trova l'utente nel database
     const user = await User.findOne({ username });
     if (!user) {
-      return res.status(400).json({ error: 'Utente già esistente' });
+      return res.status(400).json({ error: 'Utente non trovato' });
     }
 
-    // Confronta la password (presupponendo che il modello User abbia un metodo comparePassword)
+    // Verifica se comparePassword è una funzione
+    if (typeof user.comparePassword !== 'function') {
+      console.error('Il metodo comparePassword non è definito correttamente.');
+      return res.status(500).json({ error: 'Errore interno del server: metodo di confronto password mancante.' });
+    }
+
+
+    // Confronta la password 
     const isMatch = await user.comparePassword(password);
     if (!isMatch) {
-      return res.status(400).json({ error: 'Invalid credentials' });
+      return res.status(400).json({ error: 'Credenziali non valide' });
     }
 
     // Genera il token JWT
@@ -129,8 +154,20 @@ app.post('/api/login', async (req, res) => {
       { expiresIn: '1h' } // Scadenza del token
     );
 
+    if (!token) {
+      console.error('Errore nella generazione del token JWT.');
+      return res.status(500).json({ error: 'Errore del server: impossibile generare il token' });
+    }
+
     // Restituisci il token nella risposta
-    return res.status(200).json({ token });
+    return res.status(200).json({ 
+      token,
+      user: {
+        id: user._id, // Usa `user.id` o `user._id` a seconda della tua struttura
+        username: user.username,
+        role: user.role, // Assicurati che `role` sia salvato nel database
+      },
+    });
   } catch (error) {
     console.error('Errore durante il login:', error);
     return res.status(500).json({ error: 'Errore del server durante la login' });
