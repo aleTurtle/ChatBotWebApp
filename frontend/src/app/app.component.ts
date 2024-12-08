@@ -14,21 +14,22 @@ import { CommonModule } from '@angular/common';
       <nav class="navbar">
         <h1 class="title">S Y N C H R O</h1>
         <ul class="navbar-menu">
-          <li><a routerLink="/home" class="navbar-link">Home</a></li>
-          <li><a routerLink="/about" class="navbar-link">About</a></li>
-          <li><a routerLink="/chatbot" class="navbar-link">Chatbot</a></li>
-        </ul>
+    <li><a routerLink="/home" class="navbar-link" (click)="goToHome()">Home</a></li>
 
-        <!-- Aggiunta dei pulsanti di login, sign up e logout -->
-        <div class="navbar-buttons">
-          <!-- Se l'utente è autenticato, mostra il pulsante di logout -->
-          <button *ngIf="isAuthenticated" class="btn-logout" (click)="logout()">Logout</button>
-          
-          <!-- Se l'utente NON è autenticato, mostra i pulsanti di login e sign up -->
-          <button *ngIf="!isAuthenticated" class="btn-login" routerLink="/login">Login</button>
-          <button *ngIf="!isAuthenticated" class="btn-signup" routerLink="/sign-up">Sign Up</button>
-        </div>
-      </nav>
+     <li><a routerLink="/about" class="navbar-link">About</a></li>
+    
+    <!-- Mostra "Chatbot" solo se l'utente non è autenticato -->
+    <li *ngIf="!isAuthenticated"><a routerLink="/chatbot" class="navbar-link">Chatbot</a></li>
+    
+   
+  </ul>
+
+  <div class="navbar-buttons">
+    <button *ngIf="isAuthenticated" class="btn-logout" (click)="logout()">Logout</button>
+    <button *ngIf="!isAuthenticated" class="btn-login" routerLink="/login">Login</button>
+    <button *ngIf="!isAuthenticated" class="btn-signup" routerLink="/sign-up">Sign Up</button>
+  </div>
+</nav>
 
       <!-- Contenuto della tua app -->
       <router-outlet></router-outlet>
@@ -50,6 +51,15 @@ export class AppComponent implements OnInit {
     this.isAuthenticated = this.authService.isAuthenticated();
   }
 
+  // Funzione per gestire il click sulla voce "Home"
+  goToHome() {
+    if (this.isAuthenticated) {
+      this.router.navigate(['/user']); // Naviga alla pagina dell'utente autenticato
+    } else {
+      this.router.navigate(['/home']); // Naviga alla pagina "home" se non autenticato
+    }
+  }
+
   // Funzione di logout
   logout() {
     this.authService.logout(); // Effettua il logout usando il servizio
@@ -57,3 +67,4 @@ export class AppComponent implements OnInit {
     this.router.navigate(['/home']); // Dopo il logout, redirige alla home o altra pagina
   }
 }
+
