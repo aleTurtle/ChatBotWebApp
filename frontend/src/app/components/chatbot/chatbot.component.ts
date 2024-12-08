@@ -1,4 +1,4 @@
-import { Component, OnInit, ViewChild, ElementRef } from '@angular/core';
+import { Component, OnInit, ViewChild, ElementRef, Input } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { FormsModule } from '@angular/forms';
 import { ChatService } from '../../services/chat.service';
@@ -11,6 +11,27 @@ import { ChatService } from '../../services/chat.service';
     <!-- Sidebar -->
     <div class="sidebar" [ngClass]="{ 'open': sidebarOpen }">
       <div class="sidebar-content">
+        <!-- User Profile Section -->
+        <div class="user-profile">
+          <h3>Profilo Utente</h3>
+          <div class="profile-info">
+            <div class="profile-icon">{{ userIcon }}</div>
+            <div class="profile-details">
+              <p>{{ username }}</p>
+            </div>
+          </div>
+        </div>
+
+        <!-- Settings Section -->
+        <div class="settings">
+          <h3>Impostazioni</h3>
+          <ul>
+            <li (click)="navigateToSettings()">Modifica Profilo</li>
+            <li (click)="navigateToPreferences()">Preferenze</li>
+          </ul>
+        </div>
+
+        <!-- Conversation Section -->
         <h3>Conversazioni</h3>
         <ul>
           <li
@@ -59,23 +80,29 @@ import { ChatService } from '../../services/chat.service';
 })
 export class ChatbotComponent implements OnInit {
   @ViewChild('messagesContainer') messagesContainer!: ElementRef;
+  @Input() username: string | null = null;
+
+  // Aggiungi la proprietà userIcon
+  userIcon: string = '';
 
   messages = [{ user: false, text: 'Benvenuto! Come posso aiutarti oggi?' }];
   userInput = '';
   loading = false;
   loadingIndex: number | null = null;
 
-  sidebarOpen = false;
+  sidebarOpen = false; // Gestisce lo stato della sidebar
+  chatWindowClass = { reduced: false, centered: true }; // Inizialmente la chat è centrata
 
   conversations: Array<{ id: number; name: string; messages: Array<{ user: boolean; text: string }> }> = [];
   activeConversationId: number | null = null;
-
-  chatWindowClass = { reduced: true, centered: false };
 
   constructor(private chatService: ChatService) {}
 
   ngOnInit() {
     this.startNewConversation();
+    if (this.username) {
+      this.userIcon = this.getUserIcon(this.username);  // Imposta userIcon quando il componente è inizializzato
+    }
   }
 
   setWelcomeMessage(username: string) {
@@ -87,13 +114,15 @@ export class ChatbotComponent implements OnInit {
     }
   }
 
+  getUserIcon(username: string): string {
+    return username ? username.charAt(0).toUpperCase() : 'U';  // Restituisce la prima lettera del nome utente
+  }
+
   toggleSidebar() {
     this.sidebarOpen = !this.sidebarOpen;
-    if (this.sidebarOpen) {
-      this.chatWindowClass = { reduced: true, centered: false };
-    } else {
-      this.chatWindowClass = { reduced: false, centered: true };
-    }
+    this.chatWindowClass = this.sidebarOpen
+      ? { reduced: true, centered: false }
+      : { reduced: false, centered: true };
   }
 
   startNewConversation() {
@@ -164,5 +193,13 @@ export class ChatbotComponent implements OnInit {
       const nativeElement = this.messagesContainer.nativeElement;
       nativeElement.scrollTo({ top: nativeElement.scrollHeight, behavior: 'smooth' });
     }
+  }
+
+  navigateToSettings() {
+    console.log('Navigazione alla sezione Impostazioni.');
+  }
+
+  navigateToPreferences() {
+    console.log('Navigazione alla sezione Preferenze.');
   }
 }

@@ -31,6 +31,7 @@ export class UserAuthenticatedComponent implements AfterViewInit {
   ngAfterViewInit() {
     if (this.chatbotComponent && this.user?.username) {
       this.chatbotComponent.setWelcomeMessage(this.user.username);
+      this.chatbotComponent.getUserIcon(this.user.username);
     }
   }
 
