@@ -28,20 +28,16 @@ import { ChatService } from '../../services/chat.service';
 
     <!-- Chat Window -->
     <div class="chat-window" [ngClass]="chatWindowClass">
-      <!-- Area dei messaggi -->
       <div class="messages" #messagesContainer>
         <div *ngFor="let message of messages; let i = index" [ngClass]="{ 'message': true, 'justify-end': message.user, 'justify-start': !message.user }">
           <div [ngClass]="{ 'user': message.user, 'bot': !message.user }">
-            <!-- Icona del chatbot accanto al messaggio del bot -->
             <div *ngIf="!message.user" class="chatbot-icon">
               <img src="assets/images/mondo3.png" alt="Chatbot Icon" />
             </div>
-            <!-- Mostra lo spinner solo per l'ultimo messaggio del bot in caricamento -->
             <div class="message-text">
               <ng-container *ngIf="loadingIndex !== i; else loadingSpinner">
                 {{ message.text }}
               </ng-container>
-              <!-- Template dello spinner -->
               <ng-template #loadingSpinner>
                 <div class="spinner"></div>
               </ng-template>
@@ -49,19 +45,14 @@ import { ChatService } from '../../services/chat.service';
           </div>
         </div>
       </div>
-      <!-- Input Box -->
       <div class="input-box">
         <textarea [(ngModel)]="userInput" placeholder="Scrivi un messaggio..." (keydown.enter)="sendMessage()" rows="1"></textarea>
         <button (click)="sendMessage()">
           <span class="send-icon">➤</span>
         </button>
-          
-        <!-- Pulsante per scorrere la chat -->
-         <button class="bottom-chat-button" (click)="scrollToBottom()">↓</button>
+        <button class="bottom-chat-button" (click)="scrollToBottom()">↓</button>
       </div>
     </div>
-
-    <!-- Pulsante per aprire/chiudere la sidebar -->
     <button class="sidebar-toggle-button" (click)="toggleSidebar()">☰</button>
   `,
   styleUrls: ['./chatbot.component.scss'],
@@ -74,26 +65,30 @@ export class ChatbotComponent implements OnInit {
   loading = false;
   loadingIndex: number | null = null;
 
-  // Stato della sidebar
   sidebarOpen = false;
 
-  // Gestione delle conversazioni
   conversations: Array<{ id: number; name: string; messages: Array<{ user: boolean; text: string }> }> = [];
-  activeConversationId: number | null = null; // ID della conversazione attiva
+  activeConversationId: number | null = null;
 
-  // Classe dinamica per la finestra di chat
   chatWindowClass = { reduced: true, centered: false };
 
   constructor(private chatService: ChatService) {}
 
   ngOnInit() {
-    this.startNewConversation(); // Inizializza una nuova conversazione all'avvio
+    this.startNewConversation();
+  }
+
+  setWelcomeMessage(username: string) {
+    const welcomeMessage = `Benvenuto, ${username}! Come posso aiutarti oggi?`;
+    this.messages[0] = { user: false, text: welcomeMessage };
+    const currentConversation = this.conversations.find((c) => c.id === this.activeConversationId);
+    if (currentConversation) {
+      currentConversation.messages[0] = { user: false, text: welcomeMessage };
+    }
   }
 
   toggleSidebar() {
     this.sidebarOpen = !this.sidebarOpen;
-
-    // Aggiorna le classi dinamiche in base allo stato della sidebar
     if (this.sidebarOpen) {
       this.chatWindowClass = { reduced: true, centered: false };
     } else {
@@ -101,7 +96,6 @@ export class ChatbotComponent implements OnInit {
     }
   }
 
-  // Avvia una nuova conversazione
   startNewConversation() {
     const newConversationId = this.conversations.length + 1;
     const newConversation = {
@@ -114,7 +108,6 @@ export class ChatbotComponent implements OnInit {
     this.messages = newConversation.messages;
   }
 
-  // Passa a una conversazione esistente
   switchConversation(conversationId: number) {
     this.activeConversationId = conversationId;
     const conversation = this.conversations.find((c) => c.id === conversationId);
@@ -123,12 +116,11 @@ export class ChatbotComponent implements OnInit {
     }
   }
 
-  // Chiude una conversazione (opzionale)
   closeConversation(conversationId: number) {
     this.conversations = this.conversations.filter((c) => c.id !== conversationId);
     if (this.activeConversationId === conversationId) {
       this.activeConversationId = null;
-      this.messages = []; // Resetta i messaggi
+      this.messages = [];
     }
   }
 
@@ -151,7 +143,7 @@ export class ChatbotComponent implements OnInit {
           }
           this.loading = false;
           this.loadingIndex = null;
-          this.scrollToBottom(); // Scorri in fondo dopo la risposta
+          this.scrollToBottom();
         },
         () => {
           if (currentConversation) {
@@ -159,11 +151,11 @@ export class ChatbotComponent implements OnInit {
           }
           this.loading = false;
           this.loadingIndex = null;
-          this.scrollToBottom(); // Scorri comunque
+          this.scrollToBottom();
         }
       );
       this.userInput = '';
-      this.scrollToBottom(); // Scorri dopo aver aggiunto il messaggio dell'utente
+      this.scrollToBottom();
     }
   }
 
@@ -174,4 +166,3 @@ export class ChatbotComponent implements OnInit {
     }
   }
 }
- 

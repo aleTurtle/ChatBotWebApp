@@ -100,8 +100,8 @@
   right: 70px;
 }
 
-.navbar-buttons .btn-login,
-.navbar-buttons .btn-signup {
+/* Stili comuni per i bottoni (login, sign up, logout) */
+.navbar-buttons button {
   padding: 8px 20px;
   font-size: 14px;
   border: none;
@@ -110,10 +110,10 @@
   transition: background-color 0.3s ease-in-out, transform 0.2s;
 }
 
+/* Bottone di login */
 .navbar-buttons .btn-login {
-  background-color: #8a9093;
+  background-color: #8a9093; /* Grigio come il bottone di login */
   color: #fff;
-  
 }
 
 .navbar-buttons .btn-login:hover {
@@ -122,13 +122,25 @@
   transform: scale(1.05);
 }
 
+/* Bottone di sign-up */
 .navbar-buttons .btn-signup {
-  background-color: #8a9093;
+  background-color: #8a9093; /* Grigio per il bottone di sign-up */
   color: #fff;
 }
 
 .navbar-buttons .btn-signup:hover {
-  background-color: #cb2d4f;
+  background-color: #cb2d4f; /* Rosso quando ci passi sopra */
+  transform: scale(1.05);
+}
+
+/* Bottone di logout */
+.navbar-buttons .btn-logout {
+  background-color: #8a9093; /* Grigio come il bottone di login */
+  color: #fff;
+}
+
+.navbar-buttons .btn-logout:hover {
+  background-color: #cb2d4f; /* Rosso come il bottone di sign-up */
   transform: scale(1.05);
 }
 

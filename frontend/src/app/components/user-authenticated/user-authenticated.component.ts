@@ -1,19 +1,21 @@
-import { Component } from '@angular/core';
-import { AuthService } from '../../services/auth.service'; // Servizio Auth
+import { Component, AfterViewInit, ViewChild } from '@angular/core';
+import { AuthService } from '../../services/auth.service';
 import { Router } from '@angular/router';
-import { User } from '../../models/User'; 
+import { User } from '../../models/User';
+import { ChatbotComponent } from '../chatbot/chatbot.component';
 
 @Component({
   selector: 'app-user-authenticated',
   standalone: true,
-  //imports:[CommonModule]; oppure modifica il file ts 
   templateUrl: './user-authenticated.component.html',
-  styleUrls: ['./user-authenticated.component.scss']
+  styleUrls: ['./user-authenticated.component.scss'],
+  imports: [ChatbotComponent],
 })
-export class UserAuthenticatedComponent {
+export class UserAuthenticatedComponent implements AfterViewInit {
   user: User | null = null;
 
-// riscrivo il costruttore anche considernado i casi peggiori
+  @ViewChild(ChatbotComponent) chatbotComponent!: ChatbotComponent;
+
   constructor(private authService: AuthService, private router: Router) {
     try {
       this.user = this.authService.getAuthenticatedUser();
@@ -26,17 +28,20 @@ export class UserAuthenticatedComponent {
     }
   }
 
-  //recupera il nome dell'utente
+  ngAfterViewInit() {
+    if (this.chatbotComponent && this.user?.username) {
+      this.chatbotComponent.setWelcomeMessage(this.user.username);
+    }
+  }
+
   get username(): string | null {
     return this.user?.username || null;
   }
 
-  // genera l'icona dell'utente
   get userIcon(): string {
     return this.username ? this.username.charAt(0).toUpperCase() : '';
   }
 
-  //effettua il logout
   logout(): void {
     try {
       this.authService.logout();
