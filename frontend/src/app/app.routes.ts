@@ -5,9 +5,15 @@ import { AboutComponent } from './components/about/about.component';
 import { LoginComponent } from './components/login/login.component';
 import { SignupComponent } from './components/signup/signup.component';
 import { UserAuthenticatedComponent } from './components/user-authenticated/user-authenticated.component';
+import { SupportComponent } from './components/support/support.component';
+import { ReportProblemComponent } from './components/report-problem/report-problem.component';
 
 export const routes: Routes = [
   { path: '', component: HomeComponent }, // Home page
+
+  { path: 'report-problem', component: ReportProblemComponent }, // pagina per inviare segnalazioni o richieste non ben gestite
+
+  {path:'support',component: SupportComponent}, //pagina dedicata allo sviluppo del progetto
 
   {path: 'user' , component: UserAuthenticatedComponent}, //pagina dell'utente autenticato
 

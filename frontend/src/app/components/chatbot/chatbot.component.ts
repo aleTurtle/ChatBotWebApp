@@ -2,6 +2,7 @@ import { Component, OnInit, ViewChild, ElementRef, Input } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { FormsModule } from '@angular/forms';
 import { ChatService } from '../../services/chat.service';
+import { Router } from '@angular/router';
 
 @Component({
   selector: 'app-chatbot',
@@ -27,6 +28,7 @@ import { ChatService } from '../../services/chat.service';
           <h3>Impostazioni</h3>
           <ul>
             <li (click)="navigateToSettings()">Modifica Profilo</li>
+            <li (click)="navigateToProblem()">Segnala problema</li>
             <li (click)="navigateToPreferences()">Preferenze</li>
           </ul>
         </div>
@@ -43,7 +45,8 @@ import { ChatService } from '../../services/chat.service';
             <button class="close-conversation" (click)="closeConversation(conversation.id); $event.stopPropagation()">✖</button>
           </li>
         </ul>
-        <button class="new-conversation" (click)="startNewConversation()">➕ Nuova Conversazione</button>
+        <button class="new-conversation" (click)="startNewConversation()">
+        <span class= conversation icon>➕</span> Nuova Conversazione</button>
       </div>
     </div>
 
@@ -95,7 +98,7 @@ export class ChatbotComponent implements OnInit {
   conversations: Array<{ id: number; name: string; messages: Array<{ user: boolean; text: string }> }> = [];
   activeConversationId: number | null = null;
 
-  constructor(private chatService: ChatService) {}
+  constructor(private chatService: ChatService, private router: Router) {}
 
   ngOnInit() {
     this.startNewConversation();
@@ -196,5 +199,10 @@ export class ChatbotComponent implements OnInit {
 
   navigateToPreferences() {
     console.log('Navigazione alla sezione Preferenze.');
+  }
+
+  navigateToProblem() {
+      this.router.navigate(['/report-problem']);
+    
   }
 }

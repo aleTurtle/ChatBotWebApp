@@ -17,6 +17,9 @@ import { CommonModule } from '@angular/common';
     <li><a routerLink="/home" class="navbar-link" (click)="goToHome()">Home</a></li>
 
      <li><a routerLink="/about" class="navbar-link">About</a></li>
+
+     <!-- Mostra "Supporto" solo se l'utente è autenticato -->
+    <li *ngIf="isAuthenticated"><a routerLink="/support" class="navbar-link">Supporto</a></li>
     
     <!-- Mostra "Chatbot" solo se l'utente non è autenticato -->
     <li *ngIf="!isAuthenticated"><a routerLink="/chatbot" class="navbar-link">Chatbot</a></li>
