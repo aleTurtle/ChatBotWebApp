@@ -81,9 +81,8 @@ import { ChatService } from '../../services/chat.service';
 export class ChatbotComponent implements OnInit {
   @ViewChild('messagesContainer') messagesContainer!: ElementRef;
   @Input() username: string | null = null;
+  @Input() userIcon: string = '';
 
-  // Aggiungi la proprietà userIcon
-  userIcon: string = '';
 
   messages = [{ user: false, text: 'Benvenuto! Come posso aiutarti oggi?' }];
   userInput = '';
@@ -100,9 +99,7 @@ export class ChatbotComponent implements OnInit {
 
   ngOnInit() {
     this.startNewConversation();
-    if (this.username) {
-      this.userIcon = this.getUserIcon(this.username);  // Imposta userIcon quando il componente è inizializzato
-    }
+    
   }
 
   setWelcomeMessage(username: string) {
@@ -114,9 +111,7 @@ export class ChatbotComponent implements OnInit {
     }
   }
 
-  getUserIcon(username: string): string {
-    return username ? username.charAt(0).toUpperCase() : 'U';  // Restituisce la prima lettera del nome utente
-  }
+
 
   toggleSidebar() {
     this.sidebarOpen = !this.sidebarOpen;
