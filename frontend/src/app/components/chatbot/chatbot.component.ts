@@ -16,7 +16,7 @@ import { Router } from '@angular/router';
         <div class="user-profile">
           <h3>Profilo Utente</h3>
           <div class="profile-info">
-            <div class="profile-icon">{{ userIcon }}</div>
+            <div class="profile-icon" (click)="toggleProfile()">{{ userIcon }}</div>
             <div class="profile-details">
               <p>{{ username }}</p>
             </div>
@@ -76,8 +76,22 @@ import { Router } from '@angular/router';
         </button>
         <button class="bottom-chat-button" (click)="scrollToBottom()">↓</button>
       </div>
+      
     </div>
     <button class="sidebar-toggle-button" (click)="toggleSidebar()">☰</button>
+
+    <!-- Profile Modal -->
+    <div class="user-profile-modal" *ngIf="showProfile">
+      <div class="profile-header">
+        <h3>Profilo Utente</h3>
+        <button class="close-profile" (click)="toggleProfile()">✖</button>
+      </div>
+      <div class="profile-content">
+        <div class="profile-icon">{{ userIcon }}</div>
+        <p class="profile-name">{{ username }}</p>
+        
+      </div>
+    </div>
   `,
   styleUrls: ['./chatbot.component.scss'],
 })
@@ -94,6 +108,7 @@ export class ChatbotComponent implements OnInit {
 
   sidebarOpen = false; // Gestisce lo stato della sidebar
   chatWindowClass = { reduced: false, centered: true }; // Inizialmente la chat è centrata
+  showProfile=false;
 
   conversations: Array<{ id: number; name: string; messages: Array<{ user: boolean; text: string }> }> = [];
   activeConversationId: number | null = null;
@@ -114,7 +129,9 @@ export class ChatbotComponent implements OnInit {
     }
   }
 
-
+toggleProfile(){
+  this.showProfile=!this.showProfile;
+}
 
   toggleSidebar() {
     this.sidebarOpen = !this.sidebarOpen;
