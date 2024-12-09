@@ -1,35 +1,31 @@
 const mongoose = require('mongoose');
+const messageSchema = require('./message'); // Includi direttamente il messageSchema
 
 // Schema per la conversazione
-const conversationSchema = new mongoose.Schema(
-  {
-    user: {
-      type: mongoose.Schema.Types.ObjectId,
-      ref: 'User', // Riferimento all'utente (l'unico che interagisce con il chatbot)
-      required: true,
-    },
-    messages: [messageSchema], // Array di messaggi associati alla conversazione
-    status: {
-      type: String,
-      enum: ['in corso', 'completata'], // Stato della conversazione
-      default: 'in corso', // Impostato su 'in corso' di default
-    },
-    startedAt: {
-      type: Date,
-      default: Date.now, // Quando è iniziata la conversazione
-    },
-    endedAt: {
-      type: Date,
-      default: null, // Se la conversazione è completata, registriamo la data di fine
-    },
+const conversationSchema = new mongoose.Schema({
+  user: {
+    type: mongoose.Schema.Types.ObjectId,
+    ref: 'User', // Riferimento all'utente
+    required: true,
   },
-  {
-    timestamps: true, // Aggiunge automaticamente i campi 'createdAt' e 'updatedAt'
-  }
-);
+  messages: [messageSchema], // Utilizza il messageSchema direttamente
+  status: {
+    type: String,
+    enum: ['in corso', 'completata'],
+    default: 'in corso', // Impostato su 'in corso' di default
+  },
+  startedAt: {
+    type: Date,
+    default: Date.now, // Quando è iniziata la conversazione
+  },
+  endedAt: {
+    type: Date,
+    default: null, // Se la conversazione è completata, registriamo la data di fine
+  },
+}, {
+  timestamps: true, // Aggiunge automaticamente i campi 'createdAt' e 'updatedAt'
+});
 
-// Creazione del modello Conversation
 const Conversation = mongoose.model('Conversation', conversationSchema);
 
-// Esportazione del modello
 module.exports = Conversation;

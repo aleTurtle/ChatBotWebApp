@@ -1,19 +1,15 @@
-// services/chatService.js
+const RasaEngine = require('../nlp/rasaEngine');
 
-const courseService = require('./courseService');
-const facultyService = require('./facultyService');
+class ChatService {
+  constructor(baseUrl) {
+    this.rasaEngine = new RasaEngine(baseUrl);
+  }
 
-exports.handleCourseInfoRequest = async (userId, courseName) => {
-  const faculty = await facultyService.getDefaultFaculty(); // Assume la facoltà di default è Informatica
-  return await courseService.getCourseByNameAndFaculty(courseName, faculty._id);
-};
+  // Ottieni la risposta del bot per un messaggio dell'utente
+  async getBotResponse(userMessage) {
+    const rasaResponse = await this.rasaEngine.sendMessage(userMessage);
+    return rasaResponse[0]?.text || 'Errore nella risposta del bot';
+  }
+}
 
-
-//In futuro, se l’utente può specificare la propria facoltà o se l’università diventa multi-facoltà, 
-//sarà sufficiente aggiungere una funzione per ottenere facultyId in base all’utente, 
-//piuttosto che usare getDefaultFaculty.
-
-//Il ChatService riceve la richiesta e determina la facoltà dell’utente (inizialmente Informatica).
-//Passa il facultyId al CourseService.
-//Il CourseService usa facultyId per cercare solo i corsi della facoltà di Informatica.
-//Il ChatService restituisce i risultati all’utente.
+module.exports = ChatService;

@@ -1,0 +1,53 @@
+const Conversation = require('../models/Conversation');
+const Message = require('../models/Message');
+
+class ConversationService {
+  // Crea una nuova conversazione
+  async createConversation(userId, message) {
+    const newMessage = new Message({ message, sender: 'user' });
+
+    const newConversation = new Conversation({
+      user: userId,
+      messages: [newMessage], // Aggiungi il primo messaggio della conversazione
+    });
+
+    return await newConversation.save();
+  }
+
+  // Trova tutte le conversazioni di un utente
+  async findConversationsByUser(userId) {
+    return await Conversation.find({ user: userId }).populate('user');
+  }
+
+  // Trova una conversazione tramite l'ID
+  async findConversationById(conversationId) {
+    return await Conversation.findById(conversationId).populate('user');
+  }
+
+  // Aggiungi un messaggio a una conversazione esistente
+  async addMessageToConversation(conversationId, message, sender) {
+    const conversation = await this.findConversationById(conversationId);
+    if (!conversation) throw new Error('Conversazione non trovata.');
+
+    const newMessage = new Message({ message, sender });
+
+    conversation.messages.push(newMessage);
+    await conversation.save();
+
+    return conversation;
+  }
+
+  // Completa una conversazione e imposta lo stato su 'completata'
+  async completeConversation(conversationId) {
+    const conversation = await this.findConversationById(conversationId);
+    if (!conversation) throw new Error('Conversazione non trovata.');
+
+    conversation.status = 'completata';
+    conversation.endedAt = Date.now();
+    await conversation.save();
+
+    return conversation;
+  }
+}
+
+module.exports = new ConversationService();

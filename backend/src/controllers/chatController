@@ -1,0 +1,50 @@
+exports.chat = async (req, res) => {
+    const { message, user } = req.body;  // conversationId,
+  
+    if (!message) {
+      return res.status(400).json({ error: 'Messaggio obbligatorio.' });
+    }
+  
+    try {
+      /*
+      const conversation = await ConversationService.findConversationById(conversationId);
+      if (!conversation) {
+        return res.status(404).json({ error: 'Conversazione non trovata.' });
+      }
+      */
+  
+      // Crea una nuova conversazione con il messaggio dell'utente come primo messaggio
+      const newConversation = new Conversation({
+        user,  // L'ID dell'utente che sta avviando la conversazione
+        messages: [{ text: message, sender: 'user', timestamp: Date.now() }]  // Aggiungi il messaggio dell'utente
+      });
+  
+      // Salva la conversazione
+      await newConversation.save();
+  
+      const botResponse = await chatService.getBotResponse(message);
+  
+      // Aggiungi il messaggio dell'utente
+      await ConversationService.addMessageToConversation(newConversation._id, message, 'user');
+  
+      // Aggiungi il messaggio del bot
+      await ConversationService.addMessageToConversation(newConversation._id, botResponse, 'bot');
+  
+      res.status(200).json({ botResponse });
+    } catch (error) {
+      console.error('Errore nel flusso della conversazione:', error);
+  
+      // Log dettagliato dell'errore
+      if (error instanceof TypeError) {
+        console.error('Tipo di errore:', error.message);
+      } else {
+        console.error('Errore sconosciuto:', error);
+      }
+  
+      // Stampa la traccia dello stack per diagnosticare meglio
+      console.error(error.stack);
+  
+      res.status(500).json({ error: 'Errore del server.' });
+    }
+  };
+  

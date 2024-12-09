@@ -1,0 +1,18 @@
+const ConversationService = require('../services/conversationService');
+
+exports.addMessage = async (req, res) => {
+  const { conversationId } = req.params;
+  const { message, sender } = req.body;
+
+  if (!message || !sender) {
+    return res.status(400).json({ error: 'Messaggio e mittente sono obbligatori.' });
+  }
+
+  try {
+    const conversation = await ConversationService.addMessageToConversation(conversationId, message, sender);
+    res.status(200).json({ conversation });
+  } catch (error) {
+    console.error(error);
+    res.status(500).json({ error: 'Errore del server.' });
+  }
+};

@@ -1,0 +1,10 @@
+const Message = require('../models/Message');
+
+class MessageService {
+  // Recupera tutti i messaggi di una conversazione
+  async getMessagesByConversation(conversationId) {
+    return await Message.find({ conversation: conversationId }).sort('timestamp');
+  }
+}
+
+module.exports = new MessageService();

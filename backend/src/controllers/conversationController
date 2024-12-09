@@ -1,84 +1,29 @@
-const Conversation = require('../models/conversation');
+const ConversationService = require('../services/conversationService');
 
-// Avvia una nuova conversazione
-const startConversation = async (req, res) => {
-  const { userId } = req.body;
+exports.createConversation = async (req, res) => {
+  const { userId, message } = req.body;
+
+  if (!userId || !message) {
+    return res.status(400).json({ error: 'User ID e messaggio sono obbligatori.' });
+  }
 
   try {
-    const newConversation = new Conversation({
-      user: userId,
-      messages: [],
-    });
-
-    await newConversation.save();
-
-    res.status(201).json({ message: 'Conversazione avviata', conversation: newConversation });
+    const conversation = await ConversationService.createConversation(userId, message);
+    res.status(201).json({ conversation });
   } catch (error) {
-    res.status(500).json({ message: 'Errore nella creazione della conversazione', error });
+    console.error(error);
+    res.status(500).json({ error: 'Errore del server.' });
   }
 };
 
-// Aggiungi un messaggio a una conversazione
-const addMessageToConversation = async (req, res) => {
-  const { conversationId, sender, content } = req.body;
-
-  try {
-    const conversation = await Conversation.findById(conversationId);
-
-    if (!conversation) {
-      return res.status(404).json({ message: 'Conversazione non trovata' });
-    }
-
-    conversation.messages.push({ sender, content });
-
-    await conversation.save();
-
-    res.status(200).json({ message: 'Messaggio aggiunto', conversation });
-  } catch (error) {
-    res.status(500).json({ message: 'Errore nell\'aggiungere il messaggio', error });
-  }
-};
-
-// Completa una conversazione
-const endConversation = async (req, res) => {
-  const { conversationId } = req.body;
-
-  try {
-    const conversation = await Conversation.findById(conversationId);
-
-    if (!conversation) {
-      return res.status(404).json({ message: 'Conversazione non trovata' });
-    }
-
-    conversation.status = 'completata';
-    conversation.endedAt = Date.now();
-
-    await conversation.save();
-
-    res.status(200).json({ message: 'Conversazione completata', conversation });
-  } catch (error) {
-    res.status(500).json({ message: 'Errore nel completare la conversazione', error });
-  }
-};
-
-// Ottieni tutte le conversazioni di un utente
-const getUserConversations = async (req, res) => {
+exports.getUserConversations = async (req, res) => {
   const { userId } = req.params;
 
   try {
-    const conversations = await Conversation.find({ user: userId });
-    if (conversations.length === 0) {
-      return res.status(404).json({ message: 'Nessuna conversazione trovata per questo utente' });
-    }
-    res.status(200).json(conversations);
+    const conversations = await ConversationService.findConversationsByUser(userId);
+    res.status(200).json({ conversations });
   } catch (error) {
-    res.status(500).json({ message: 'Errore nel recupero delle conversazioni', error });
+    console.error(error);
+    res.status(500).json({ error: 'Errore del server.' });
   }
-};
-
-module.exports = {
-  startConversation,
-  addMessageToConversation,
-  endConversation,
-  getUserConversations,
 };

@@ -1,0 +1,33 @@
+const AuthService = require('../services/authService');
+
+const login = async (req, res) => {
+  const { username, password } = req.body;
+
+  try {
+    // Trova l'utente
+    const user = await AuthService.findUserByUsername(username);
+    if (!user) {
+      return res.status(400).json({ message: 'Credenziali non valide' });
+    }
+
+    // Verifica la password
+    const isMatch = await AuthService.verifyPassword(user, password);
+    if (!isMatch) {
+      return res.status(400).json({ message: 'Credenziali non valide' });
+    }
+
+    // Genera il token
+    const token = AuthService.generateToken(user._id);
+
+    // Invia la risposta
+    res.json({
+      token,
+      user: AuthService.getUserResponse(user),
+    });
+  } catch (error) {
+    console.error('Errore durante il login:', error);
+    res.status(500).json({ message: 'Errore del server' });
+  }
+};
+
+module.exports = { login };

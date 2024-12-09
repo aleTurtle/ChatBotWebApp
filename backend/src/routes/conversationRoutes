@@ -1,23 +1,8 @@
 const express = require('express');
-const {
-  startConversation,
-  addMessageToConversation,
-  endConversation,
-  getUserConversations,
-} = require('../controllers/conversationController');
-
 const router = express.Router();
+const conversationController = require('../controllers/conversationController');
 
-// Avvia una nuova conversazione
-router.post('/start', startConversation);
-
-// Aggiungi un messaggio alla conversazione
-router.post('/add-message', addMessageToConversation);
-
-// Completa la conversazione
-router.post('/end', endConversation);
-
-// Ottieni tutte le conversazioni di un utente
-router.get('/:userId', getUserConversations);
+router.post('/', conversationController.createConversation);
+router.get('/user/:userId', conversationController.getUserConversations);
 
 module.exports = router;
