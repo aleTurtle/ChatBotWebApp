@@ -1,17 +1,22 @@
 const AuthService = require('../services/authService');
+const { sanitizeInput } = require('../services/sanitizationService');
 
 const login = async (req, res) => {
   const { username, password } = req.body;
 
   try {
+    // Sanifica l'input dell'utente
+    const sanitizedUsername = sanitizeInput(username);
+    const sanitizedPassword = sanitizeInput(password);
+
     // Trova l'utente
-    const user = await AuthService.findUserByUsername(username);
+    const user = await AuthService.findUserByUsername(sanitizedUsername);
     if (!user) {
       return res.status(400).json({ message: 'Credenziali non valide' });
     }
 
     // Verifica la password
-    const isMatch = await AuthService.verifyPassword(user, password);
+    const isMatch = await AuthService.verifyPassword(user, sanitizedPassword);
     if (!isMatch) {
       return res.status(400).json({ message: 'Credenziali non valide' });
     }

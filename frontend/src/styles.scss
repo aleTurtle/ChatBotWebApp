@@ -1,7 +1,13 @@
 /* You can add global styles to this file, and also import other style files */
 
+// Importa Bootstrap SCSS
+@use 'bootstrap/scss/bootstrap' as *;
+
 @import url('https://fonts.googleapis.com/css2?family=Rubik+Robo+One&display=swap');
 @import url('https://fonts.googleapis.com/css2?family=Raleway:wght@100&display=swap" rel="stylesheet');
+
+
+
 
 
 .chat-window {

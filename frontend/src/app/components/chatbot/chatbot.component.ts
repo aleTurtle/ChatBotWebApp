@@ -3,52 +3,19 @@ import { CommonModule } from '@angular/common';
 import { FormsModule } from '@angular/forms';
 import { ChatService } from '../../services/chat.service';
 import { Router } from '@angular/router';
+import { SidebarComponent } from '../sidebar/sidebar.component';
 
 @Component({
   selector: 'app-chatbot',
   standalone: true,
-  imports: [CommonModule, FormsModule],
+  imports: [CommonModule, FormsModule, SidebarComponent],
   template: `
-    <!-- Sidebar -->
-    <div class="sidebar" [ngClass]="{ 'open': sidebarOpen }">
-      <div class="sidebar-content">
-        <!-- User Profile Section -->
-        <div class="user-profile">
-          <h3>Profilo Utente</h3>
-          <div class="profile-info">
-            <div class="profile-icon" (click)="toggleProfile()">{{ userIcon }}</div>
-            <div class="profile-details">
-              <p>{{ username }}</p>
-            </div>
-          </div>
-        </div>
-
-        <!-- Settings Section -->
-        <div class="settings">
-          <h3>Impostazioni</h3>
-          <ul>
-            <li (click)="navigateToSettings()">Modifica Profilo</li>
-            <li (click)="navigateToProblem()">Segnala problema</li>
-            <li (click)="navigateToPreferences()">Preferenze</li>
-          </ul>
-        </div>
-
-        <!-- Conversation Section -->
-        <h3>Conversazioni</h3>
-        <ul>
-          <li
-            *ngFor="let conversation of conversations"
-            [class.active]="conversation.id === activeConversationId"
-            (click)="switchConversation(conversation.id)"
-          >
-            {{ conversation.name }}
-            <button class="close-conversation" (click)="closeConversation(conversation.id); $event.stopPropagation()">✖</button>
-          </li>
-        </ul>
-        <button class="new-conversation" (click)="startNewConversation()">
-        <span class= conversation icon>➕</span> Nuova Conversazione</button>
-      </div>
-    </div>
+    <app-sidebar
+      [username]="username"
+      [userIcon]="userIcon"
+      [conversations]="conversations"
+      [activeConversationId]="activeConversationId"
+    ></app-sidebar>
 
     <!-- Chat Window -->
     <div class="chat-window" [ngClass]="chatWindowClass">
@@ -76,21 +43,6 @@ import { Router } from '@angular/router';
         </button>
         <button class="bottom-chat-button" (click)="scrollToBottom()">↓</button>
       </div>
-      
-    </div>
-    <button class="sidebar-toggle-button" (click)="toggleSidebar()">☰</button>
-
-    <!-- Profile Modal -->
-    <div class="user-profile-modal" *ngIf="showProfile">
-      <div class="profile-header">
-        <h3>Profilo Utente</h3>
-        <button class="close-profile" (click)="toggleProfile()">✖</button>
-      </div>
-      <div class="profile-content">
-        <div class="profile-icon">{{ userIcon }}</div>
-        <p class="profile-name">{{ username }}</p>
-        
-      </div>
     </div>
   `,
   styleUrls: ['./chatbot.component.scss'],
@@ -99,17 +51,11 @@ export class ChatbotComponent implements OnInit {
   @ViewChild('messagesContainer') messagesContainer!: ElementRef;
   @Input() username: string | null = null;
   @Input() userIcon: string = '';
-
-
   messages = [{ user: false, text: 'Benvenuto! Come posso aiutarti oggi?' }];
   userInput = '';
   loading = false;
   loadingIndex: number | null = null;
-
-  sidebarOpen = false; // Gestisce lo stato della sidebar
-  chatWindowClass = { reduced: false, centered: true }; // Inizialmente la chat è centrata
-  showProfile=false;
-
+  chatWindowClass = { reduced: false, centered: true };
   conversations: Array<{ id: number; name: string; messages: Array<{ user: boolean; text: string }> }> = [];
   activeConversationId: number | null = null;
 
@@ -117,7 +63,6 @@ export class ChatbotComponent implements OnInit {
 
   ngOnInit() {
     this.startNewConversation();
-    
   }
 
   setWelcomeMessage(username: string) {
@@ -127,17 +72,6 @@ export class ChatbotComponent implements OnInit {
     if (currentConversation) {
       currentConversation.messages[0] = { user: false, text: welcomeMessage };
     }
-  }
-
-toggleProfile(){
-  this.showProfile=!this.showProfile;
-}
-
-  toggleSidebar() {
-    this.sidebarOpen = !this.sidebarOpen;
-    this.chatWindowClass = this.sidebarOpen
-      ? { reduced: true, centered: false }
-      : { reduced: false, centered: true };
   }
 
   startNewConversation() {
@@ -150,22 +84,6 @@ toggleProfile(){
     this.conversations.push(newConversation);
     this.activeConversationId = newConversationId;
     this.messages = newConversation.messages;
-  }
-
-  switchConversation(conversationId: number) {
-    this.activeConversationId = conversationId;
-    const conversation = this.conversations.find((c) => c.id === conversationId);
-    if (conversation) {
-      this.messages = conversation.messages;
-    }
-  }
-
-  closeConversation(conversationId: number) {
-    this.conversations = this.conversations.filter((c) => c.id !== conversationId);
-    if (this.activeConversationId === conversationId) {
-      this.activeConversationId = null;
-      this.messages = [];
-    }
   }
 
   sendMessage() {
@@ -208,18 +126,5 @@ toggleProfile(){
       const nativeElement = this.messagesContainer.nativeElement;
       nativeElement.scrollTo({ top: nativeElement.scrollHeight, behavior: 'smooth' });
     }
-  }
-
-  navigateToSettings() {
-    console.log('Navigazione alla sezione Impostazioni.');
-  }
-
-  navigateToPreferences() {
-    console.log('Navigazione alla sezione Preferenze.');
-  }
-
-  navigateToProblem() {
-      this.router.navigate(['/report-problem']);
-    
   }
 }
