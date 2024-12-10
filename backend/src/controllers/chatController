@@ -1,49 +1,33 @@
 exports.chat = async (req, res) => {
-    const { message, user } = req.body;  // conversationId,
+    const { message, user } = req.body;
   
-    if (!message) {
-      return res.status(400).json({ error: 'Messaggio obbligatorio.' });
+    if (!message ) {
+      return res.status(400).json({ error: 'Utente e messaggio sono obbligatori.' });
     }
   
     try {
-      /*
-      const conversation = await ConversationService.findConversationById(conversationId);
-      if (!conversation) {
-        return res.status(404).json({ error: 'Conversazione non trovata.' });
-      }
-      */
-  
-      // Crea una nuova conversazione con il messaggio dell'utente come primo messaggio
-      const newConversation = new Conversation({
-        user,  // L'ID dell'utente che sta avviando la conversazione
-        messages: [{ text: message, sender: 'user', timestamp: Date.now() }]  // Aggiungi il messaggio dell'utente
+      // Crea una nuova conversazione o utilizza una esistente
+      const conversation = await Conversation.create({
+        user,
+        messages: [{ text: message, sender: 'user', timestamp: Date.now() }],
       });
   
-      // Salva la conversazione
-      await newConversation.save();
-  
+      // Risposta del bot
       const botResponse = await chatService.getBotResponse(message);
   
-      // Aggiungi il messaggio dell'utente
-      await ConversationService.addMessageToConversation(newConversation._id, message, 'user');
+      // Aggiungi la risposta del bot alla conversazione
+      conversation.messages.push({
+        text: botResponse,
+        sender: 'bot',
+        timestamp: Date.now(),
+      });
   
-      // Aggiungi il messaggio del bot
-      await ConversationService.addMessageToConversation(newConversation._id, botResponse, 'bot');
+      // Salva la conversazione aggiornata
+      await conversation.save();
   
       res.status(200).json({ botResponse });
     } catch (error) {
-      console.error('Errore nel flusso della conversazione:', error);
-  
-      // Log dettagliato dell'errore
-      if (error instanceof TypeError) {
-        console.error('Tipo di errore:', error.message);
-      } else {
-        console.error('Errore sconosciuto:', error);
-      }
-  
-      // Stampa la traccia dello stack per diagnosticare meglio
-      console.error(error.stack);
-  
+      console.error('Errore nella gestione del messaggio:', error);
       res.status(500).json({ error: 'Errore del server.' });
     }
   };

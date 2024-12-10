@@ -16,5 +16,11 @@ const messageSchema = new mongoose.Schema({
   },
 });
 
+//const Message = mongoose.model('Message', messageSchema);
+//module.exports =  messageSchema ; //messageSchema; //anziche message// Crea ed esporta il modello
 
-module.exports = messageSchema;
+ //Controlla se il modello esiste già prima di crearlo
+ const Message = mongoose.models.Message || mongoose.model('Message', messageSchema);
+
+//const Message = mongoose.model('Message', messageSchema);
+module.exports = Message;

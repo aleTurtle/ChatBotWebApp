@@ -1,10 +1,33 @@
-const Message = require('../models/Message');
+const Message = require('../models/message'); // Modello Mongoose per i messaggi
+const rasaEngine = require('../nlp/rasaEngine'); // Modulo per comunicare con Rasa
 
 class MessageService {
-  // Recupera tutti i messaggi di una conversazione
-  async getMessagesByConversation(conversationId) {
-    return await Message.find({ conversation: conversationId }).sort('timestamp');
+  static async handleMessage(userMessage) {
+    try {
+      // Invia il messaggio a Rasa
+      const rasaResponse = await rasaEngine.sendMessage(userMessage);
+      const botResponseText = rasaResponse[0]?.text || 'Errore nella risposta del bot';
+
+      // Salva il messaggio dell'utente nel database
+      const userMessageEntry = new Message({
+        message: userMessage,
+        sender: 'user',
+      });
+      await userMessageEntry.save();
+
+      // Salva la risposta del bot nel database
+      const botMessageEntry = new Message({
+        message: botResponseText,
+        sender: 'bot',
+      });
+      await botMessageEntry.save();
+
+      return botResponseText;
+    } catch (error) {
+      console.error("Errore durante la gestione del messaggio:", error.message);
+      throw new Error('Errore nel servizio di messaggistica');
+    }
   }
 }
 
-module.exports = new MessageService();
+module.exports = MessageService;

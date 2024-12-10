@@ -11,8 +11,8 @@ const connectDB = require('./src/config/db'); // Importa la funzione di connessi
 const swaggerUi = require('swagger-ui-express'); // Interfaccia Swagger
 const swaggerSpecs = require('./src/config/swaggerDef'); // Configurazione Swagger
 
-//const Message = require('./src/models/Message'); // Modello per il salvataggio dei messaggi
-//const User = require('./src/models/User'); //modello per il salvataggio degli utenti nel db 
+const Message = require('./src/models/Message'); // Modello per il salvataggio dei messaggi
+const User = require('./src/models/User'); //modello per il salvataggio degli utenti nel db 
 //const jwt = require('jsonwebtoken');//importa i moduli per la generazione del jwt
 
 // Importa il motore NLP
@@ -60,23 +60,47 @@ app.use('/api/auth', loginRoutes);
 app.use('/api/auth', signupRoutes);
 
 
-const conversationRoutes = require('./src/routes/conversationRoutes');
-const messageRoutes = require('./src/routes/messageRoutes');
-const chatRoutes = require('./src/routes/chatRoutes');
 
-app.use('/api/conversations', conversationRoutes);
-app.use('/api/messages', messageRoutes);
-app.use('/api/chat', chatRoutes);
+const messageRoutes = require('./src/routes/messageRoute');
+//const chatRoutes = require('./src/routes/chatRoute');
 
-/*const conversationsRoutes = require('./src/routes/conversations'); 
-app.use('/api/conversations', conversationsRoutes);
 
-const messageRoutes = require('./src/routes/getMessagesOfConversation'); 
-app.use('/api/conversations/:conversationId/messages', messageRoutes); 
+// Endpoint per inviare per comunicare con il bot 
+app.post('/api/chat', async (req, res) => {
+  const { message } = req.body; // Estrarre il messaggio e il mittente dal corpo della richiesta
+  if (!message ) {
+    return res.status(400).json({ error: 'Message and sender are required' });
+  }
+  try {
+    const rasaResponse = await rasaEngine.sendMessage(message); // Invia il messaggio a Rasa
+    // Estrai il testo dalla risposta di Rasa
+    const botResponseText = rasaResponse[0]?.text || 'Errore nella risposta del bot';
+    // Salva il messaggio dell'utente nel database
+    const userMessage = new Message({
+    message: message, // Messaggio dell'utente
+    sender: 'user', // Indica che è un messaggio dell'utente
+    });
+      await userMessage.save(); // Salva nel database
+// Salva la risposta del bot nel database
+const botMessage = new Message({
+  message: botResponseText, // Risposta del bot
+  sender: 'bot', // Indica che è un messaggio del bot
+});
+await botMessage.save(); // Salva nel database
+    //res.json({ responses: botResponseText }); // Invia la risposta al client
+    res.json({ responses: [{ text: botResponseText }] });
+    console.log('Risposta inviata al frontend:', { responses: [{ text: botResponseText }] });
+  } catch (error) {
+    console.error("Errore durante la comunicazione con Rasa:", error.message);
+    res.status(500).json({ error: 'Internal server error' });
+  }
+});
 
-const conversationUserRoutes = require('./src/routes/conversationsOfUser');
-app.use('/api/conversations/user/:userId', conversationUserRoutes);
-/*/
+const chatRoutes = require('./src/routes/chat'); // Importa il modulo delle routes
+app.use('/api/chat', chatRoutes); // Usa le routes
+
+
+
 
 // Configura la porta dal file .env o usa 3000 di default
 const PORT = process.env.PORT;
