@@ -1,34 +1,39 @@
-exports.chat = async (req, res) => {
-    const { message, user } = req.body;
-  
-    if (!message ) {
-      return res.status(400).json({ error: 'Utente e messaggio sono obbligatori.' });
-    }
-  
-    try {
-      // Crea una nuova conversazione o utilizza una esistente
-      const conversation = await Conversation.create({
-        user,
-        messages: [{ text: message, sender: 'user', timestamp: Date.now() }],
-      });
-  
-      // Risposta del bot
-      const botResponse = await chatService.getBotResponse(message);
-  
-      // Aggiungi la risposta del bot alla conversazione
-      conversation.messages.push({
-        text: botResponse,
-        sender: 'bot',
-        timestamp: Date.now(),
-      });
-  
-      // Salva la conversazione aggiornata
-      await conversation.save();
-  
-      res.status(200).json({ botResponse });
-    } catch (error) {
-      console.error('Errore nella gestione del messaggio:', error);
-      res.status(500).json({ error: 'Errore del server.' });
-    }
-  };
-  
+const Message = require('../models/Message'); // Importa il modello Message
+const nlpService = require('../services/nlpService'); // Importa il nuovo servizio NLP
+
+// Funzione per gestire la conversazione
+const handleChatMessage = async (req, res) => {
+  const { message } = req.body; // Estrai il messaggio dal corpo della richiesta
+
+  if (!message) {
+    return res.status(400).json({ error: 'Message is required' });
+  }
+
+  try {
+    // Invia il messaggio al motore NLP tramite il service
+    const botResponseText = await nlpService.sendMessageToNLP(message);
+
+    // Salva il messaggio dell'utente nel database
+    const userMessage = new Message({
+      message: message,
+      sender: 'user',
+    });
+    await userMessage.save(); // Salva nel database
+
+    // Salva la risposta del bot nel database
+    const botMessage = new Message({
+      message: botResponseText,
+      sender: 'bot',
+    });
+    await botMessage.save(); // Salva nel database
+
+    // Risposta al client con il messaggio del bot
+    res.json({ responses: [{ text: botResponseText }] });
+    console.log('Risposta inviata al frontend:', { responses: [{ text: botResponseText }] });
+  } catch (error) {
+    console.error("Errore durante la gestione della conversazione:", error.message);
+    res.status(500).json({ error: 'Internal server error' });
+  }
+};
+
+module.exports = { handleChatMessage };
