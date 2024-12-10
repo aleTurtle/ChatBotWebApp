@@ -1,14 +1,20 @@
 const User = require('../models/User'); // Modello utente dal database
+const { sanitizeInput } = require('../services/sanitizationService'); //sanifica username e password
 
 // Signup logic
 const signup = async (req, res) => {
-  const { username, password } = req.body;
+  let { username, password } = req.body;
 
   if (!username || !password) {
     return res.status(400).json({ error: 'Username e password sono obbligatori.' });
   }
 
   try {
+
+    // Sanifica l'input utilizzando il servizio
+    username = sanitizeInput(username);
+    password = sanitizeInput(password);
+
     // Verifica che l'username non sia già usato
     const existingUser = await User.findOne({ username });
 

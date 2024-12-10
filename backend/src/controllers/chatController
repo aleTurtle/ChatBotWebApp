@@ -1,5 +1,6 @@
 const Message = require('../models/Message'); // Importa il modello Message
 const nlpService = require('../services/nlpService'); // Importa il nuovo servizio NLP
+const { sanitizeInput } = require('../services/sanitizationService');
 
 // Funzione per gestire la conversazione
 const handleChatMessage = async (req, res) => {
@@ -10,8 +11,12 @@ const handleChatMessage = async (req, res) => {
   }
 
   try {
-    // Invia il messaggio al motore NLP tramite il service
-    const botResponseText = await nlpService.sendMessageToNLP(message);
+
+   // Sanifica l'input dell'utente
+   const sanitizedMessage = sanitizeInput(message);
+
+   // Invia il messaggio sanificato al motore NLP tramite il service
+   const botResponseText = await nlpService.sendMessageToNLP(sanitizedMessage);
 
     // Salva il messaggio dell'utente nel database
     const userMessage = new Message({
