@@ -8,11 +8,13 @@ intents:
   - bot_challenge         
   - provide_course_type
   - ask_lessons
+  - ask_lessons_by_year 
 
 entities:
   - course_type
   - start_date
   - end_date
+  - year     #anno accademico frequentato
 
 slots:
   start_date:
@@ -52,6 +54,19 @@ responses:
   #utter_ask_for_dates:
   #  - text: "Per favore, forniscimi le date di inizio e fine nel formato 'gg mese'."
 
+  utter_year_lessons:
+    - text: "Ecco le lezioni per l'anno {anno}."
+  
+
 actions:
   - action_get_lessons
   - action_provide_course_info
+  - action_get_lessons_by_year
+
+pipeline:
+  - name: WhitespaceTokenizer
+  - name: RegexEntityExtractor
+    case_sensitive: False
+    regex:
+      - name: year
+        pattern: "(1|primo|2|secondo|3|terzo)" #associa le parole ai numeri

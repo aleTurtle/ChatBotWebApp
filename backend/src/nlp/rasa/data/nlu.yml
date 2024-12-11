@@ -45,3 +45,15 @@ nlu:
       - Mostrami il calendario delle lezioni per questo mese
       - Voglio sapere quali lezioni ci sono oggi
       - Mostrami tutte le lezioni dal [10 ottobre](start_date) al [18 ottobre](end_date)
+  
+  - intent: ask_lessons_by_year
+    examples: |
+      - Mostrami le lezioni per l'anno [1](year)
+      - Lezioni del [primo](year)
+      - Voglio le lezioni per il [terzo](year) anno
+      - Quali sono le lezioni per il [secondo](year) anno
+      - Dammi tutte le lezioni dell'anno [2](year)
+      - Mostrami il programma per l'anno [3](year)
+      - Le lezioni per l'anno [4](year)
+
+  

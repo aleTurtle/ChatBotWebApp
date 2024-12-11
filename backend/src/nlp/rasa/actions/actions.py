@@ -4,7 +4,7 @@ from rasa_sdk.executor import CollectingDispatcher
 from typing import Any, Text, Dict, List
 from datetime import datetime, timedelta
 import pytz
-import dateparser
+import dateparser #parsa le date e le comprende  
 import json
 import re  # Per rimuovere i tag HTML
 
@@ -95,10 +95,12 @@ class ActionGetLessons(Action):
                             description = clean_html(description_raw)  # Pulisci la descrizione
                             start = datetime.fromtimestamp(lesson["start"] // 1000).strftime('%d %B %Y, %H:%M')
                             end = datetime.fromtimestamp(lesson["end"] // 1000).strftime('%H:%M')
+                            year = lesson.get("anno", "Anno non specificato")
 
                             message += (
                                 f"- {title}: {description}. "
                                 f"Inizio: {start}, Fine: {end}.\n"
+                                f"Anno: {year}\n"
                             )
                     else:
                         message = f"Non ci sono lezioni programmate dal {start_date.strftime('%d %B')} al {end_date.strftime('%d %B')}."
@@ -134,20 +136,56 @@ class ActionProvideCourseInfo(Action):
 
 
 
-
-
-class ActionProvideCourseInfo(Action):
+class ActionGetLessonsByYear(Action):
     def name(self) -> Text:
-        return "action_provide_course_info"
+        return "action_get_lessons_by_year"
 
     def run(self, dispatcher: CollectingDispatcher,
             tracker: "Tracker",
             domain: Dict[Text, Any]) -> List[Dict[Text, Any]]:
 
-        # Log per debug
-        print("Ciao sono Dave")
+        # Recupera l'anno richiesto dall'utente (ad esempio, "anno 1", "anno 2", "anno 3")
+        anno_utente = next(tracker.get_latest_entity_values("year"), None)
 
-        # Risposta dell'azione
-        dispatcher.utter_message(text="Sto recuperando le informazioni del corso richiesto.")
+        if not anno_utente:
+            dispatcher.utter_message(text="Non sono riuscito a capire a quale anno ti riferisci. Per favore, specifica l'anno (ad esempio, 'anno 1').")
+            return []
 
+        # Converti l'anno in formato numerico, se necessario
+        try:
+            anno_utente = int(anno_utente)
+        except ValueError:
+            dispatcher.utter_message(text="L'anno specificato non è valido.")
+            return []
+
+        # Chiama l'azione ActionGetLessons per ottenere tutte le lezioni
+        action_get_lessons = ActionGetLessons()
+        lessons = action_get_lessons.run(dispatcher, tracker, domain)  # Ottieni tutte le lezioni
+
+        # Filtra le lezioni per l'anno richiesto
+        lezioni_filtrate = []
+        for lesson in lessons:
+            if lesson.get("year") == anno_utente:
+                lezioni_filtrate.append(lesson)
+
+        # Costruisci il messaggio da inviare all'utente
+        if lezioni_filtrate:
+            message = f"Ecco le lezioni disponibili per l'anno {anno_utente}:\n"
+            for lesson in lezioni_filtrate:
+                title = lesson.get("title", "Titolo non disponibile")
+                description_raw = lesson.get("description", "Descrizione non disponibile")
+                description = clean_html(description_raw)  # Pulisci la descrizione
+                start = datetime.fromtimestamp(lesson["start"] // 1000).strftime('%d %B %Y, %H:%M')
+                end = datetime.fromtimestamp(lesson["end"] // 1000).strftime('%H:%M')
+                
+                message += (
+                    f"- {title}: {description}. "
+                    f"Inizio: {start}, Fine: {end}.\n"
+                    f"Anno: {anno_utente}\n"
+                )
+        else:
+            message = f"Non ci sono lezioni per l'anno {anno_utente} nel periodo richiesto."
+
+        # Rispondi all'utente
+        dispatcher.utter_message(text=message)
         return []

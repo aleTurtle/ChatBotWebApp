@@ -32,3 +32,10 @@ stories:
     steps:
       - intent: ask_lessons
       - action: action_get_lessons
+
+  - story: chiedi lezioni per anno
+    steps:
+      - intent: ask_lessons_by_year
+        entities:
+          - year: 1  # L'anno specificato dall'utente
+      - action: action_get_lessons_by_year
