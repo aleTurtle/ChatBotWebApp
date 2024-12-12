@@ -19,12 +19,10 @@ Nella fase intermedia del progetto, sono state utilizzate api Swagger per testar
 Il frontend, realizzato con Angular, implementa un pattern Single Page Application ed è stata sviluppato per essere responsive, e quindi fruibile sia in modalità web che mobile.
 
 L’utente può accedere a tale servizio previa autenticazione: poiché il progetto è sperimentale, la persistenza dei dati viene mantenuta in un database fittizio (non è quindi direttamente quello dell’università) atto solo allo scopo di mostrare la persistenza dei dati.
-
 Avvenuta l’autenticazione, l’utente visualizzerà una finestra di chat con un messaggio di benvenuto direttamente dal chatbot e, cliccando l’apposito bottone, potrà visualizzare una sidebar in cui è mostrato il suo profilo e l’elenco delle funzionalità disponibili.
 
 
 È aggiunta, inoltre, la possibilità di poter inviare consigli di miglioramento per la piattaforma o, in caso, la possibilità di poter segnalare problemi o richieste non ben gestite. Tali funzionalità sono fittizie e simulano solo il comportamento di come potrebbe apparire una applicazione del genere.
-
 La UI adotta un design minimal e moderno, ispirato alla palette di colori del sito di Unicam; è stato fatto uso anche della libreria Boostrap per fornire stili appropriati.
 
 
