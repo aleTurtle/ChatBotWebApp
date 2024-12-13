@@ -1,4 +1,4 @@
-import { Component, Input } from '@angular/core';
+import { Component, Input ,Output, EventEmitter} from '@angular/core';
 import { Router } from '@angular/router';
 import { CommonModule } from '@angular/common';
 
@@ -31,6 +31,9 @@ import { CommonModule } from '@angular/common';
         </div>
 
         <!-- Conversation Section -->
+        <button class="view-messages" (click)="viewUserMessages()">
+  📋 Visualizza Messaggi Utente
+</button>
         <h3>Conversazioni</h3>
         <ul>
           <li
@@ -45,9 +48,12 @@ import { CommonModule } from '@angular/common';
         <button class="new-conversation" (click)="startNewConversation()">
           <span class="conversation icon">➕</span> Nuova Conversazione
         </button>
+
       </div>
     </div>
     <button class="sidebar-toggle-button" (click)="toggleSidebar()">☰</button>
+    <!-- New Button to View Messages -->
+
   `,
   styleUrls: ['./sidebar.component.scss'],
 })
@@ -56,6 +62,8 @@ export class SidebarComponent {
   @Input() userIcon: string = '';
   @Input() conversations: Array<{ id: number; name: string }> = [];
   @Input() activeConversationId: number | null = null;
+
+  @Output() userMessagesRequested = new EventEmitter<void>(); // Output Event
 
   sidebarOpen = false;
   showProfile=false;
@@ -92,4 +100,13 @@ export class SidebarComponent {
   navigateToProblem() {
     this.router.navigate(['/report-problem']);
   }
+
+
+  viewUserMessages() {
+    console.log('Visualizzazione dei messaggi dell\'utente.');
+    this.userMessagesRequested.emit(); // Emissione dell'evento
+  }
+
+
+
 }

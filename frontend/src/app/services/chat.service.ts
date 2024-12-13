@@ -18,4 +18,7 @@ export class ChatService {
     const payload = { message: userMessage };
     return this.http.post<BotResponse>(environment.baseUrl+'/api/chat', payload); 
   }
+
+
+  
 }

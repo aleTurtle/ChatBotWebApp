@@ -10,6 +10,8 @@ const messageSchema = new mongoose.Schema({
     required: true,
     enum: ['user', 'bot'], // Limita i valori a 'user' o 'bot'
   },
+  
+
   timestamp: {
     type: Date,
     default: Date.now,
@@ -23,4 +25,7 @@ const messageSchema = new mongoose.Schema({
  const Message = mongoose.models.Message || mongoose.model('Message', messageSchema);
 
 //const Message = mongoose.model('Message', messageSchema);
-module.exports = Message;
+//module.exports = Message;
+
+// Esporta sia lo schema che il modello
+module.exports = { messageSchema, Message };

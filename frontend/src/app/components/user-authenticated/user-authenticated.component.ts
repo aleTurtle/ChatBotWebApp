@@ -13,6 +13,7 @@ import { ChatbotComponent } from '../chatbot/chatbot.component';
 })
 export class UserAuthenticatedComponent implements AfterViewInit {
   user: User | null = null;
+  userMessages: string[] = []; // Lista per memorizzare i messaggi dell'utente
 
   @ViewChild(ChatbotComponent) chatbotComponent!: ChatbotComponent;
 
@@ -33,6 +34,12 @@ export class UserAuthenticatedComponent implements AfterViewInit {
       this.chatbotComponent.setWelcomeMessage(this.user.username);
       this.chatbotComponent.userIcon = this.user.username.charAt(0).toUpperCase(); 
     }
+  }
+
+   // Metodo per gestire i messaggi ricevuti dal ChatbotComponent
+   handleMessageSent(message: string): void {
+    console.log('Messaggio ricevuto:', message);
+    this.userMessages.push(message); // Salva il messaggio nella lista
   }
 
   get username(): string | null {

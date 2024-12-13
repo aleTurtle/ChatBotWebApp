@@ -21,7 +21,7 @@ export const routes: Routes = [
 
   { path: 'login', component: LoginComponent}, // pagina di login 
 
-  { path: 'chatbot', component: ChatbotComponent }, // Chatbot page
+ // { path: 'chatbot', component: ChatbotComponent }, // Chatbot page
 
   { path: 'about', component: AboutComponent}, //pagina dedicata a spiegare il progetto e rispondere alle FAQ
 
