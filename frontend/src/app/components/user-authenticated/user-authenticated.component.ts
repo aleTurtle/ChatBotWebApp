@@ -2,7 +2,8 @@ import { Component, AfterViewInit, ViewChild } from '@angular/core';
 import { AuthService } from '../../services/auth.service';
 import { Router } from '@angular/router';
 import { User } from '../../models/User';
-import { ChatbotComponent } from '../chatbot/chatbot.component';
+import { ChatbotComponent} from '../chatbot/chatbot.component';
+
 
 @Component({
   selector: 'app-user-authenticated',
@@ -16,6 +17,7 @@ export class UserAuthenticatedComponent implements AfterViewInit {
   userMessages: string[] = []; // Lista per memorizzare i messaggi dell'utente
 
   @ViewChild(ChatbotComponent) chatbotComponent!: ChatbotComponent;
+ 
 
   constructor(private authService: AuthService, private router: Router) {
     try {
@@ -30,9 +32,11 @@ export class UserAuthenticatedComponent implements AfterViewInit {
   }
 
   ngAfterViewInit() {
-    if (this.chatbotComponent && this.user?.username) {
+    if (this.chatbotComponent && this.user) {
       this.chatbotComponent.setWelcomeMessage(this.user.username);
       this.chatbotComponent.userIcon = this.user.username.charAt(0).toUpperCase(); 
+      this.chatbotComponent.username = this.user.username;
+      this.chatbotComponent.role = this.user.role;
     }
   }
 

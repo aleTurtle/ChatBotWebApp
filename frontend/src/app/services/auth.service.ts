@@ -16,8 +16,8 @@ export class AuthService {
   constructor(private http: HttpClient) {}
 
   // Registrazione (Sign Up)
-  signUp(username: string, password: string): Observable<AuthResponse> {
-    return this.http.post<AuthResponse>(`${environment.baseUrl}/api/auth/signup`, { username, password });
+  signUp(username: string, password: string, role:string): Observable<AuthResponse> {
+    return this.http.post<AuthResponse>(`${environment.baseUrl}/api/auth/signup`, { username, password,role });
   }
 
   // Login

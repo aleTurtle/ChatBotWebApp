@@ -20,6 +20,14 @@ export class LoginComponent {
   onSubmit() {
     // Chiamata al servizio di autenticazione per effettuare il login
     this.authService.login(this.user.username, this.user.password).subscribe(
+
+      /*
+      if(!this.user.username || !this.user.password){
+        alert('Tutti i campi sono obbligatori!');
+        return;
+      }
+      */
+
       (response) => {
         console.log('Risposta del server:', response);
 

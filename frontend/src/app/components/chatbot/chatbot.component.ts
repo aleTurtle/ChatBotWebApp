@@ -11,7 +11,8 @@ import { SidebarComponent } from '../sidebar/sidebar.component';
   imports: [CommonModule, FormsModule, SidebarComponent],
   template: `
     <app-sidebar
-      [username]="username"
+    [username]="username"
+    [role]="role"
       [userIcon]="userIcon"
       [conversations]="conversations"
       [activeConversationId]="activeConversationId"
@@ -51,6 +52,9 @@ export class ChatbotComponent implements OnInit {
   @ViewChild('messagesContainer') messagesContainer!: ElementRef;
   @Input() username: string | null = null;
   @Input() userIcon: string = '';
+  @Input() role: string | null = null;
+
+  
 
   messages = [{ user: false, text: 'Benvenuto! Come posso aiutarti oggi?' }];
   userInput = '';

@@ -14,9 +14,7 @@ import { CommonModule } from '@angular/common';
           <h3>Profilo Utente</h3>
           <div class="profile-info">
             <div class="profile-icon" (click)="toggleProfile()">{{ userIcon }}</div>
-            <div class="profile-details">
-              <p>{{ username }}</p>
-            </div>
+            
           </div>
         </div>
 
@@ -51,6 +49,19 @@ import { CommonModule } from '@angular/common';
 
       </div>
     </div>
+
+    <!-- Modal Profilo -->
+<div class="user-profile-modal" *ngIf="showProfile">
+  <div class="profile-header">
+    Profilo Utente
+    <button class="close-profile" (click)="toggleProfile()">✖</button>
+  </div>
+  <div class="profile-content">
+    <div class="profile-icon">{{ userIcon }}</div>
+    <p><strong>Nome utente</strong>: {{ username }}</p>
+    <p><strong>Ruolo:</strong> {{ role }}</p>
+  </div>
+</div>
     <button class="sidebar-toggle-button" (click)="toggleSidebar()">☰</button>
     <!-- New Button to View Messages -->
 
@@ -59,6 +70,7 @@ import { CommonModule } from '@angular/common';
 })
 export class SidebarComponent {
   @Input() username: string | null = null;
+  @Input() role: string | null = null;
   @Input() userIcon: string = '';
   @Input() conversations: Array<{ id: number; name: string }> = [];
   @Input() activeConversationId: number | null = null;
@@ -106,7 +118,9 @@ export class SidebarComponent {
     console.log('Visualizzazione dei messaggi dell\'utente.');
     this.userMessagesRequested.emit(); // Emissione dell'evento
   }
-
-
-
+/*
+ setUsername(username:string){
+    this.username =  username;
+  }
+*/
 }
