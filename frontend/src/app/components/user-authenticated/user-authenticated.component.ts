@@ -15,7 +15,7 @@ import { ChatbotComponent} from '../chatbot/chatbot.component';
 export class UserAuthenticatedComponent implements AfterViewInit {
   user: User | null = null;
   userMessages: string[] = []; // Lista per memorizzare i messaggi dell'utente
-  isAuthenticated = false; // Variabile che tiene traccia dello stato di autenticazione
+ 
 
 
   @ViewChild(ChatbotComponent) chatbotComponent!: ChatbotComponent;
@@ -26,7 +26,6 @@ export class UserAuthenticatedComponent implements AfterViewInit {
       this.user = this.authService.getAuthenticatedUser();
       if (!this.user) {
         console.log('Nessun utente autenticato trovato. Reindirizzamento a login.');
-        //this.isAuthenticated = true; // Aggiorna lo stato di autenticazione
         this.router.navigate(['/login']);
       }
     } catch (error) {
@@ -41,6 +40,7 @@ export class UserAuthenticatedComponent implements AfterViewInit {
       this.chatbotComponent.userIcon = this.user.username.charAt(0).toUpperCase(); 
       this.chatbotComponent.username = this.user.username;
       this.chatbotComponent.role = this.user.role;
+      
     }
   }
 

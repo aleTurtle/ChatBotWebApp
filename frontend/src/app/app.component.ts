@@ -1,8 +1,9 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, OnInit ,OnDestroy} from '@angular/core';
 import { Router } from '@angular/router';
 import { AuthService } from './services/auth.service'; // Servizio per la gestione dell'autenticazione
 import { RouterLink, RouterOutlet } from '@angular/router';
 import { CommonModule } from '@angular/common';
+import { Subscription } from 'rxjs'; // Importa Subscription per gestire la sottoscrizione
 
 @Component({
   selector: 'app-root',
@@ -40,19 +41,30 @@ import { CommonModule } from '@angular/common';
   `,
   styleUrls: ['./app.component.scss'],
 })
-export class AppComponent implements OnInit {
+export class AppComponent implements OnInit, OnDestroy {
   isAuthenticated = false; // Variabile che tiene traccia dello stato di autenticazione
+  private authStatusSubscription!: Subscription; // Variabile per la sottoscrizione
 
   constructor(private authService: AuthService, private router: Router) {}
 
-  ngOnInit() {
-    this.checkAuthentication(); // Verifica lo stato di autenticazione all'avvio
+  ngOnInit(): void {
+    // Sottoscrizione ai cambiamenti dello stato di autenticazione
+    this.authStatusSubscription = this.authService.getAuthenticationStatus().subscribe(
+      (status: boolean) => {
+        this.isAuthenticated = status; // Aggiorna lo stato di autenticazione quando cambia
+      }
+    );
   }
 
-  // Controlla se l'utente è autenticato
-  checkAuthentication() {
-    this.isAuthenticated = this.authService.isAuthenticated();
+  ngOnDestroy(): void {
+    // Pulisce la sottoscrizione per evitare memory leaks
+    if (this.authStatusSubscription) {
+      this.authStatusSubscription.unsubscribe();
+    }
   }
+
+
+
 
   // Funzione per gestire il click sulla voce "Home"
   goToHome() {
