@@ -2,15 +2,6 @@ const mongoose = require('mongoose');
 const bcrypt = require('bcryptjs');
 
 const userSchema = new mongoose.Schema({
-  
-  // ID unico per ogni utente, generato automaticamente
-  Id: {
-    type: mongoose.Schema.Types.ObjectId,
-    required: true,
-    unique: true,
-    default: () => new mongoose.Types.ObjectId(), // Genera un ObjectId automaticamente
-  },
-
 
   // Nome dell'utente
   username: {

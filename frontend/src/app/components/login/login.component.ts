@@ -18,15 +18,18 @@ export class LoginComponent {
   constructor(private authService: AuthService, private router: Router) {}
 
   onSubmit() {
+
+    //controlla che tutti i campi siano inseriti 
+    if(!this.user.username || !this.user.password){
+      alert('Tutti i campi sono obbligatori!');
+      return;
+    }
+
+    
+
     // Chiamata al servizio di autenticazione per effettuare il login
     this.authService.login(this.user.username, this.user.password).subscribe(
-
-      /*
-      if(!this.user.username || !this.user.password){
-        alert('Tutti i campi sono obbligatori!');
-        return;
-      }
-      */
+      
 
       (response) => {
         console.log('Risposta del server:', response);
@@ -54,9 +57,15 @@ export class LoginComponent {
         this.router.navigate(['/user']);  
       },
       (error) => {
-        // Gestiamo gli errori (es. credenziali errate)
+      // Gestiamo gli errori
+      if (error.status === 404 && error.error.message === 'Utente non trovato') {
+        alert('L\'utente non esiste. Verifica il nome utente e riprova.');
+      } else if (error.status === 401) {
+        alert('Credenziali errate. Riprova.');
+      } else {
         alert('Errore di login: ' + error.message);
       }
+    }
     );
   }
 }
