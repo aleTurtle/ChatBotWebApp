@@ -1,61 +1,134 @@
-<div class="about-page">
-    <div class="about-header">
-      <h1>About SYNCHRO</h1>
-      <p>Il tuo assistente universitario digitale</p>
-    </div>
-  
+<!DOCTYPE html>
+<html lang="it">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Chi Siamo - ChatBot App</title>
+  <style>
+    /* Reset CSS per eliminare margini/padding extra e uniformare il layout */
+    * {
+      margin: 0;
+      padding: 0;
+      box-sizing: border-box;
+    }
+
+    /* Stile generale */
+    html, body {
+      height: 100%; /* Assicura che il piano grigio copra tutta l'altezza del viewport */
+      margin: 0;
+      padding: 0;
+      overflow-x: hidden; /* Evita lo scroll orizzontale indesiderato */
+    }
+
+    body {
+      font-family: 'Arial', sans-serif;
+      background-color: #f4f4f9; /* Piano grigio */
+      display: flex;
+      flex-direction: column;
+      color: #333;
+      line-height: 1.6;
+    }
+
+    .about-page {
+      flex: 1; /* Fa in modo che il contenuto riempia lo spazio disponibile */
+      max-width: 1200px;
+      margin: 0 auto;
+      padding: 10px;
+      padding-bottom: 40px;
+    }
+
+    .about-content {
+      display: flex;
+      flex-direction: column;
+      gap: 20px; /* Spazio uniforme tra le sezioni */
+    
+    }
+
+    section {
+      background: white;
+      padding: 20px;
+      border-radius: 8px;
+      box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+      display: flex;
+      align-items: flex-start;
+      gap: 20px;
+    }
+
+    section img {
+      flex-shrink: 0;
+      width: 150px;
+      height: 150px;
+      border-radius: 8px;
+      object-fit: cover;
+    }
+
+    section h2 {
+      color: #3B5998;
+      margin-top: 0;
+    }
+
+    section p {
+      margin: 0;
+      font-size: 1rem;
+    }
+
+    .about-content section:last-child {
+      margin-bottom: 40px; /* Ulteriore spazio tra l'ultimo paragrafo e il footer */
+    }
+
+    footer {
+      margin-top: 40px;
+      text-align: center;
+      padding: 10px;
+      background-color: #3B5998;
+      color: white;
+      border-radius: 8px 8px 0 0;
+    }
+  </style>
+</head>
+<body>
+  <div class="about-page">
     <div class="about-content">
       <section>
-        <h2>Cos'è S Y N C H R O?</h2>
-        <p>
-          SYNCHRO è un chatbot progettato per supportare gli studenti universitari della sezione di Informatica. 
-          Fornisce risposte rapide e precise su argomenti come orari delle lezioni, 
-          informazioni sui corsi,informazioni sui professori e assistenza (se pur ancora ad un certo grado).
-        </p>
+        <img src="https://media-assets.wired.it/photos/65c23eaefa6ab622e95838da/1:1/w_2560%2Cc_limit/Meta-AI-Watermarking-Business-695214778.jpg" alt="Team in azione">
+        <div>
+          <h2>La nostra missione</h2>
+          <p>
+            SYNCHRO è un chatbot progettato per supportare gli studenti universitari della sezione di Informatica. 
+            Poiché è ancora sperimentale come progetto, presenta qualche margine di errore; nonostante ciò,
+            punta a diventare uno strumento utile e intuitivo per la comunità universitaria.
+          </p>
+        </div>
       </section>
-  
+
       <section>
-        <h2>Perché  S Y N C H R O?</h2>
-        <p>
-          Il nome SYNCHRO è stato scelto per il fatto che rappresenta un portale unico 
-          in cui esistono contemporaneamente tutte le informazioni di cui hanno bisogno gli studenti, 
-          ma anche docenti interni o visitatori esterni.   
-          SYNCHRO accelerà la ricerca di informazioni rapide e rende il tutto più semplice.
-        </p>
+        <img src="https://www.shutterstock.com/image-vector/artificial-intelligence-circuit-line-style-600nw-2326615941.jpg" alt="Innovazione">
+        <div>
+          <h2>Innovazione e tecnologia</h2>
+          <p>
+            SYNCHRO è stato creato per rendere l'esperienza universitaria più accessibile 
+            e senza stress. Grazie al chatbot gli studenti possono reperire velocemente le informazioni di cui hanno bisogno e
+            accedere ad una conoscenza più totale della propria università.
+          </p>
+        </div>
       </section>
-  
+
       <section>
-        <h2>Le funzionalità</h2>
-        <ul>
-          <li>Risposte sugli orari delle lezioni e sulle aule</li>
-          <li>Informazioni sui corsi e sui professori</li>
-          <li>Accesso rapido a documenti amministrativi</li>
-          <li>Procedure e iscrizione allo stage</li>
-          <li>Procedura e iscrizione all'appello di laurea</li>
-          <li>Notifiche personalizzate sugli eventi universitari</li>
-          <li>Supporto 24/7</li>
-        </ul>
-      </section>
-  
-      <section>
-        <h2>L'obiettivo</h2>
-        <p>
-          SYNCHRO è stato creato per rendere l'esperienza universitaria più accessibile 
-          e senza stress. Con il nostro chatbot, gli studenti possono reperire velocemente le informazioni e
-          accedere ad una conoscenza più totale della propria università.
-        </p>
-      </section>
-  
-      <section class="team-section">
-        <h2>Il team dietro S Y N C H R O</h2>
-        <p>
-          Inizialmente pensato come progetto di tesi sperimentale di uno studente del terzo anno, 
-          punta a diventare un progetto di ricerca interno alla sezione di Informatica la quale, lavorando
-          insieme ai suoi membri per creare uno strumento utile e intuitivo per la comunità universitaria, auspica
-          un sviluppo progressivo di tale strumento e, in futuro, esteso a tutte le facoltà di Unicam nel solco dell'innovazione
-          e di un'offerta didattica sempre più ampia a supporto degli studenti.
-        </p>
+        <img src="/assets/images/unicam logo 7.jpg" alt="Team collaborativo">
+        <div>
+          <h2>Il nostro team</h2>
+          <p>
+           Tale progetto nasce da un proposta di tesi triennale: si attesta come un servizio nato dagli studenti per gli studenti.
+           L'impegno degli studenti e la guida dei professori rappresentano i valori di Unicam e si identificano come gli ingredienti per 
+           ottenere prodotti di tale portata.
+          </p>
+        </div>
       </section>
     </div>
   </div>
-  
+
+  <footer>
+    &copy; 2024 Synchro Unicam - Tutti i diritti riservati.
+  </footer>
+</body>
+</html>

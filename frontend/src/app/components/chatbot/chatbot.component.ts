@@ -1,8 +1,7 @@
-import { Component, OnInit, ViewChild, ElementRef,Input } from '@angular/core';
+import { Component, OnInit, ViewChild, ElementRef, Input } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { FormsModule } from '@angular/forms';
 import { ChatService } from '../../services/chat.service';
-import { Router } from '@angular/router';
 import { SidebarComponent } from '../sidebar/sidebar.component';
 
 @Component({
@@ -11,11 +10,13 @@ import { SidebarComponent } from '../sidebar/sidebar.component';
   imports: [CommonModule, FormsModule, SidebarComponent],
   template: `
     <app-sidebar
-    [username]="username"
-    [role]="role"
+      [username]="username"
+      [role]="role"
       [userIcon]="userIcon"
       [conversations]="conversations"
       [activeConversationId]="activeConversationId"
+      (conversationSwitched)="handleConversationSwitched($event)"
+      (newConversationStarted)="startNewConversation()"
     ></app-sidebar>
 
     <!-- Chat Window -->
@@ -51,25 +52,66 @@ import { SidebarComponent } from '../sidebar/sidebar.component';
 export class ChatbotComponent implements OnInit {
   @ViewChild('messagesContainer') messagesContainer!: ElementRef;
   @Input() username: string | null = null;
-  @Input() userIcon: string = '';
   @Input() role: string | null = null;
+  @Input() userIcon: string = '';
+  @Input() conversations: Array<{ id: number; name: string; messages: Array<{ user: boolean; text: string }> }> = [];
+  @Input() activeConversationId: number | null = null;
 
-  
-
-  messages = [{ user: false, text: 'Benvenuto! Come posso aiutarti oggi?' }];
+  messages: Array<{ user: boolean; text: string }> = [];
   userInput = '';
   loading = false;
   loadingIndex: number | null = null;
   chatWindowClass = { reduced: false, centered: true };
-  conversations: Array<{ id: number; name: string; messages: Array<{ user: boolean; text: string }> }> = [];
-  activeConversationId: number | null = null;
 
-  constructor(private chatService: ChatService, private router: Router) {}
+  constructor(private chatService: ChatService) {}
 
   ngOnInit() {
-    this.startNewConversation();
-  } 
+    this.loadActiveConversation();
+  }
 
+  handleConversationSwitched(conversationId: number) {
+    this.activeConversationId = conversationId;
+    this.loadActiveConversation();
+  }
+
+  startNewConversation() {
+    const newConversation = {
+      id: this.conversations.length + 1,
+      name: `Conversazione ${this.conversations.length + 1}`,
+      messages: [{ user: false, text: `Benvenuto! Iniziamo una nuova conversazione.` }],
+    };
+    this.conversations.push(newConversation);
+    this.activeConversationId = newConversation.id;
+    this.messages = newConversation.messages;
+  }
+
+  loadActiveConversation() {
+    const activeConversation = this.conversations.find((c) => c.id === this.activeConversationId);
+    this.messages = activeConversation ? activeConversation.messages : [];
+  }
+
+  sendMessage() {
+    if (this.userInput.trim()) {
+      this.messages.push({ user: true, text: this.userInput });
+      const botIndex = this.messages.length;
+      this.messages.push({ user: false, text: '' });
+      this.loadingIndex = botIndex;
+
+      this.chatService.sendMessage(this.userInput).subscribe(
+        (response) => {
+          this.messages[botIndex] = { user: false, text: response.responses[0]?.text || 'Errore di risposta' };
+          this.loadingIndex = null;
+          this.scrollToBottom();
+        },
+        () => {
+          this.messages[botIndex] = { user: false, text: 'Errore: il bot non è disponibile al momento.' };
+          this.loadingIndex = null;
+          this.scrollToBottom();
+        }
+      );
+      this.userInput = '';
+    }
+  }
   setWelcomeMessage(username: string) {
     const welcomeMessage = `Benvenuto, ${username}! Come posso aiutarti oggi?`;
     this.messages[0] = { user: false, text: welcomeMessage };
@@ -78,52 +120,6 @@ export class ChatbotComponent implements OnInit {
       currentConversation.messages[0] = { user: false, text: welcomeMessage };
     }
   }
-
-  startNewConversation() {
-    const newConversationId = this.conversations.length + 1;
-    const newConversation = {
-      id: newConversationId,
-      name: `Conversazione ${newConversationId}`,
-      messages: [{ user: false, text: 'Iniziamo una nuova conversazione!' }],
-    };
-    this.conversations.push(newConversation);
-    this.activeConversationId = newConversationId;
-    this.messages = newConversation.messages;
-  }
-
-  sendMessage() {
-    if (this.userInput.trim()) {
-     
-        this.messages.push({ user: true, text: this.userInput });
-      
-
-      const botIndex = this.messages.length;
-      this.messages.push({ user: false, text: '' });
-      this.loadingIndex = botIndex;
-      this.loading = true;
-
-      this.chatService.sendMessage(this.userInput).subscribe(
-        (response) => {
-          this.messages[botIndex] = { user: false, text: response.responses[0]?.text || 'Errore di risposta' };
-          
-          this.loading = false;
-          this.loadingIndex = null;
-          this.scrollToBottom();
-        },
-        () => {
-         {
-            this.messages[botIndex] = { user: false, text: 'Errore: il bot non è disponibile al momento.' };
-          }
-          this.loading = false;
-          this.loadingIndex = null;
-          this.scrollToBottom();
-        }
-      );
-      this.userInput = '';
-      this.scrollToBottom();
-    }
-  }
-
   scrollToBottom() {
     if (this.messagesContainer) {
       const nativeElement = this.messagesContainer.nativeElement;

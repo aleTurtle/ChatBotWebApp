@@ -60,7 +60,7 @@ export class LoginComponent {
       // Gestiamo gli errori
       if (error.status === 404 && error.error.message === 'Utente non trovato') {
         alert('L\'utente non esiste. Verifica il nome utente e riprova.');
-      } else if (error.status === 401) {
+      } else if (error.status === 400) {
         alert('Credenziali errate. Riprova.');
       } else {
         alert('Errore di login: ' + error.message);
@@ -69,5 +69,3 @@ export class LoginComponent {
     );
   }
 }
-
-
