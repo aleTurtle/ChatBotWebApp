@@ -5,7 +5,8 @@
     display: block;
     width: 100%;
     height: 100vh; 
-    background: url('/assets/images/unicam sfondo.jpg') no-repeat center center fixed;
+    background: url('/assets/images/animazione 2.gif') no-repeat center center fixed;
+    //background: url(https://img.freepik.com/vettori-gratuito/circuiti-sfondo-digitale-sfumato-blu-e-rosso_23-2148821701.jpg) no-repeat center center fixed;
     background-size: cover;
     background-position: center;
     background-attachment: fixed;
@@ -30,8 +31,17 @@
   
     /* Stile per il paragrafo */
     p {
-      font-size: 15px; /* Dimensione del testo del paragrafo */
+      font-size: 20px; /* Dimensione del testo del paragrafo */
     }
   }
   
+  /* Aggiunta di un'immagine sopra l'immagine di sfondo */
+.foreground-image {
+  position: absolute;
+  top: 610px; /* Posizione dall'alto */
+  left: 20px; /* Posizione da sinistra */
+  width: 100px; /* Larghezza dell'immagine */
+  height: auto; /* Mantieni proporzioni */
+  z-index: 1; /* Assicurati che sia sopra lo sfondo */
+}
   
