@@ -48,6 +48,12 @@ La UI adotta un design minimal e moderno, ispirato alla palette di colori del si
 
 
 ## Comandi
-Per una questione di risorse e prestazioni, il progetto è eseguibile utilizzando quattro terminali diversi: uno dedicato al server di Rasa, uno dedicato al server delle azioni di Rasa, uno per eseguire il progetto backend e uno dedicato per il frontend. Sono utilizzati quindi **rasa run** (avviato automaticamente sulla porta 5005), **rasa run actions --port 5006** (avviato su una porta diversa rispetto a quella principale di Rasa), **node server.js** nella cartella backend e **ng serve** nella cartella frontend dedicata. Sono state utilizzate, inoltre, le api di Swagger per testare il progetto backend. 
+Per una questione di risorse e prestazioni, il progetto è eseguibile utilizzando quattro terminali diversi: uno dedicato al server di Rasa, uno dedicato al server delle azioni di Rasa, uno per eseguire il progetto backend e uno dedicato per il frontend. Sono utilizzati quindi 
+- **rasa run** (avviato automaticamente sulla porta 5005),
+- **rasa run actions --port 5006** (avviato su una porta diversa rispetto a quella principale di Rasa),
+-  **node server.js** nella cartella backend,
+-  **ng serve** nella cartella frontend dedicata.
+
+Sono state utilizzate, inoltre, le api di Swagger per testare il progetto backend. 
   
 
