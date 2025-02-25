@@ -54,6 +54,6 @@ Per una questione di risorse e prestazioni, il progetto è eseguibile utilizzand
 -  **node server.js** nella cartella backend,
 -  **ng serve** nella cartella frontend dedicata.
 
-Sono state utilizzate, inoltre, le api di Swagger per testare il progetto backend. 
+Sono state utilizzate le api di Swagger al link 'http://localhost:3000/api-docs/'.
   
 
